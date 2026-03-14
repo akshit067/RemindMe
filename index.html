@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>to‑do · month tasks + today</title>
+    <title>to‑do · alarms + swipe month</title>
     <!-- Google Fonts + Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -77,13 +77,15 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: 300;
             box-shadow: 0 8px 20px rgba(42, 92, 138, 0.4);
             border: none;
             cursor: pointer;
             z-index: 50;
             transition: transform 0.2s, background 0.2s;
+            line-height: 1;
+            padding-bottom: 4px;
         }
         .fab:active { transform: scale(0.92); background: var(--primary-light); }
         
@@ -132,7 +134,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* dashboard stats */
+        /* dashboard stats - clickable */
         .stats-row {
             display: flex;
             gap: 8px;
@@ -153,7 +155,10 @@
             flex-direction: column;
             align-items: center;
             box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: var(--transition);
         }
+        .stat-card:active { background: var(--primary-soft); transform: scale(0.97); }
         .stat-card span:first-child {
             font-size: 1.5rem;
             font-weight: 700;
@@ -169,7 +174,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* ----- TODAY pane (only today's date) ----- */
+        /* today header */
         .today-header {
             display: flex;
             align-items: center;
@@ -338,7 +343,7 @@
         .archive-delete-btn:active { opacity: 1; background: #fee2e2; }
         .archive-item.swipe-left { background: #fee9e7; border-color: var(--danger); }
 
-        /* ----- MONTH pane (calendar + tasks below) ----- */
+        /* month calendar - with swipe support */
         .monthly-calendar {
             background: var(--bg-card);
             border-radius: 28px;
@@ -346,6 +351,7 @@
             border: 1px solid var(--border-soft);
             margin: 0.2rem 0 1rem;
             box-shadow: var(--shadow-sm);
+            touch-action: pan-x; /* enable horizontal swipes */
         }
         .month-header {
             display: flex;
@@ -407,7 +413,7 @@
         .task-dots { font-size: 0.6rem; letter-spacing: 1px; color: var(--primary); margin-top: 2px; }
         .today .task-dots { color: #ffddb0; }
 
-        /* month task list (appears below calendar) */
+        /* month tasks */
         .month-tasks-section {
             margin-top: 0.5rem;
             padding: 0 0.2rem;
@@ -455,7 +461,79 @@
             font-weight: 600;
         }
 
-        /* modal */
+        /* popup modal for active/done tasks */
+        .popup-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 1rem;
+        }
+        .popup-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            border-radius: 40px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .popup-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        .popup-close {
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 0 0.5rem;
+        }
+        .popup-task-list {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            max-height: 60vh;
+            padding-right: 0.3rem;
+        }
+        .popup-task-item {
+            background: var(--bg-main);
+            border-radius: 30px;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border-soft);
+        }
+        .popup-task-item .task-content {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .popup-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            color: var(--text-medium);
+        }
+        .empty-popup {
+            text-align: center;
+            color: var(--text-light);
+            padding: 2rem;
+        }
+
+        /* main modal */
         .modal-overlay {
             display: none;
             position: fixed; top:0; left:0; width:100%; height:100%;
@@ -470,6 +548,17 @@
             background: white; border-radius: 48px; padding: 2rem 1.5rem; max-width:400px;
         }
         .empty-message { text-align: center; color: var(--text-light); padding: 2rem; background: var(--bg-main); border-radius: 40px; }
+
+        /* notification permission banner */
+        .notif-banner {
+            background: var(--primary-soft);
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border-soft);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -481,20 +570,26 @@
         <div class="title-area"><h1>to·do</h1></div>
     </div>
 
+    <!-- Notification permission banner -->
+    <div class="notif-banner" id="notifBanner">
+        <i class="fas fa-bell"></i> Enable reminders for alarms
+    </div>
+
     <!-- quick add -->
     <div class="quick-add">
         <input type="text" id="quickTaskInput" placeholder="✍️ Write a task...">
         <button id="quickAddBtn"><i class="fas fa-plus"></i> Add</button>
     </div>
 
+    <!-- clickable stats -->
     <div class="stats-row">
-        <div class="stat-card"><span id="activeCount">0</span> active</div>
-        <div class="stat-card"><span id="completedCount">0</span> done</div>
+        <div class="stat-card" id="activeStatBtn"><span id="activeCount">0</span> active</div>
+        <div class="stat-card" id="completedStatBtn"><span id="completedCount">0</span> done</div>
         <div class="stat-card"><span id="productivityStat">0%</span> productivity</div>
     </div>
 
     <div class="main-content" id="mainContent">
-        <!-- TODAY pane (only today's tasks) -->
+        <!-- TODAY pane -->
         <div id="todayPane">
             <div class="today-header">
                 <div class="section-title"><i class="fas fa-sun" style="color: var(--secondary);"></i> Today</div>
@@ -509,9 +604,9 @@
             <div id="archiveListContainer" class="archive-list"></div>
         </div>
 
-        <!-- MONTH pane (calendar + tasks for selected date) -->
+        <!-- MONTH pane with swipe support -->
         <div id="monthPane" style="display: none;">
-            <div class="monthly-calendar">
+            <div class="monthly-calendar" id="monthlyCalendarSwipe">
                 <div class="month-header">
                     <span class="month-name" id="monthNameDisplay"></span>
                     <div class="month-nav">
@@ -524,7 +619,6 @@
                 </div>
                 <div id="monthGrid" class="month-grid"></div>
             </div>
-            <!-- tasks for selected date (inside month pane) -->
             <div class="month-tasks-section">
                 <div class="month-tasks-title">
                     <i class="fas fa-tasks"></i> Tasks for <span id="monthSelectedDate"></span>
@@ -539,7 +633,29 @@
         <button class="nav-item" id="tabMonthly"><i class="fas fa-calendar-alt"></i><span>Monthly</span></button>
     </div>
 
-    <!-- modal -->
+    <!-- POPUP for active tasks -->
+    <div class="popup-modal" id="activePopup">
+        <div class="popup-card">
+            <div class="popup-header">
+                <h3><i class="fas fa-tasks" style="color: var(--primary);"></i> All Active Tasks</h3>
+                <button class="popup-close" id="closeActivePopup">&times;</button>
+            </div>
+            <div class="popup-task-list" id="activePopupList"></div>
+        </div>
+    </div>
+
+    <!-- POPUP for completed tasks -->
+    <div class="popup-modal" id="completedPopup">
+        <div class="popup-card">
+            <div class="popup-header">
+                <h3><i class="fas fa-check-circle" style="color: var(--success);"></i> Completed Tasks</h3>
+                <button class="popup-close" id="closeCompletedPopup">&times;</button>
+            </div>
+            <div class="popup-task-list" id="completedPopupList"></div>
+        </div>
+    </div>
+
+    <!-- modal (original) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate"></div>
@@ -557,7 +673,7 @@
     (function() {
         // --- data ---
         let activeTasks = [], completedTasks = [];
-        const STORAGE_KEY = 'todo_month_tasks_page';
+        const STORAGE_KEY = 'todo_alarm_swipe';
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             try {
@@ -591,7 +707,6 @@
         // state
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
-        // For month pane, we keep a selected date (default today)
         let selectedDate = (() => {
             const t = new Date();
             return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
@@ -599,12 +714,98 @@
         let archiveVisible = false;
         let currentTab = 'today';
 
+        // Notification permission
+        const notifBanner = document.getElementById('notifBanner');
+        if (Notification.permission === 'granted') {
+            notifBanner.style.display = 'none';
+        }
+        notifBanner.addEventListener('click', () => {
+            Notification.requestPermission().then(perm => {
+                if (perm === 'granted') notifBanner.style.display = 'none';
+            });
+        });
+
+        // --- BEEP + VIBRATION (complete & reminder) ---
+        function playCompleteSound() {
+            // vibration
+            if (navigator.vibrate) navigator.vibrate(80);
+            // beep using Web Audio
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const resumeAndPlay = () => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.value = 880; // higher pitch for completion
+                    gain.gain.value = 0.25;
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                };
+                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
+                else resumeAndPlay();
+            } catch (e) { console.log('audio not supported'); }
+        }
+
+        function playReminderSound() {
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const resumeAndPlay = () => {
+                    const osc1 = audioCtx.createOscillator();
+                    const gain1 = audioCtx.createGain();
+                    osc1.connect(gain1); gain1.connect(audioCtx.destination);
+                    osc1.frequency.value = 660;
+                    gain1.gain.value = 0.3;
+                    osc1.start();
+                    osc1.stop(audioCtx.currentTime + 0.15);
+                    setTimeout(() => {
+                        const osc2 = audioCtx.createOscillator();
+                        const gain2 = audioCtx.createGain();
+                        osc2.connect(gain2); gain2.connect(audioCtx.destination);
+                        osc2.frequency.value = 660;
+                        gain2.gain.value = 0.3;
+                        osc2.start();
+                        osc2.stop(audioCtx.currentTime + 0.15);
+                    }, 250);
+                };
+                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
+                else resumeAndPlay();
+            } catch (e) {}
+        }
+
+        // --- ALARM SYSTEM (reminder even when closed) ---
+        function checkReminders() {
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+            const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            
+            activeTasks.forEach(task => {
+                if (task.date === todayStr && task.time === currentTime) {
+                    // play sound + vibrate
+                    playReminderSound();
+                    // send notification (if permitted)
+                    if (Notification.permission === 'granted') {
+                        new Notification('⏰ Task reminder', {
+                            body: task.text,
+                            icon: 'https://cdn-icons-png.flaticon.com/512/1632/1632597.png'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Check every 30 seconds (persists even if tab inactive, but for background we rely on service workers? simplified)
+        setInterval(checkReminders, 30000);
+        // also check after 2 sec on load
+        setTimeout(checkReminders, 2000);
+
         // helpers
         function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks })); }
         function formatDisplay(iso) { const [y,m,d]=iso.split('-'); const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`; }
         function activeCountForDate(dateStr) { return activeTasks.filter(t => t.date === dateStr).length; }
 
-        // productivity stat
+        // update stats numbers
         function updateStats() {
             document.getElementById('activeCount').innerText = activeTasks.length;
             document.getElementById('completedCount').innerText = completedTasks.length;
@@ -621,9 +822,8 @@
             return '<i class="fas fa-flag priority-low"></i>';
         }
 
-        // ----- TODAY pane (only tasks for today's date) -----
+        // ----- TODAY pane -----
         function renderTodayPane() {
-            // Always use actual today's date, not selectedDate
             const today = new Date();
             const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
             document.getElementById('todayDateLabel').innerText = todayStr;
@@ -653,16 +853,15 @@
                 container.innerHTML = html;
             }
             renderArchiveList();
-            attachActiveListeners(); // for toggle/delete/swipe
+            attachActiveListeners();
             updateStats();
         }
 
-        // ----- MONTH pane (calendar + tasks for selectedDate) -----
+        // ----- MONTH pane -----
         function renderMonthPane() {
             const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
             document.getElementById('monthNameDisplay').innerText = `${monthNames[currentMonth]} ${currentYear}`;
             
-            // Render calendar grid
             const grid = document.getElementById('monthGrid');
             const firstDay = new Date(currentYear, currentMonth, 1).getDay();
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -689,15 +888,13 @@
             }
             grid.innerHTML = html;
 
-            // Attach click to calendar cells
             document.querySelectorAll('#monthGrid .cal-cell[data-date]').forEach(cell => {
                 cell.addEventListener('click', () => {
                     selectedDate = cell.dataset.date;
-                    renderMonthPane(); // re-render to highlight new selected date & tasks
+                    renderMonthPane();
                 });
             });
 
-            // Render tasks for selectedDate below calendar
             document.getElementById('monthSelectedDate').innerText = selectedDate;
             const monthTaskContainer = document.getElementById('monthTaskList');
             const filtered = activeTasks.filter(t => t.date === selectedDate);
@@ -723,11 +920,10 @@
                 });
                 monthTaskContainer.innerHTML = html;
             }
-            // Re-attach listeners for tasks inside month pane (they use same toggle/delete)
             attachActiveListeners();
         }
 
-        // Archive list (shared)
+        // Archive list
         function renderArchiveList() {
             const arcContainer = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
@@ -773,9 +969,9 @@
                         const idx = completedTasks.findIndex(t => t.id === id);
                         if (idx !== -1) {
                             completedTasks.splice(idx, 1);
-                            save(); playFeedback();
+                            save(); playCompleteSound(); // use complete sound for archive delete
                             if (currentTab === 'today') renderTodayPane();
-                            else { renderMonthPane(); renderArchiveList(); } // archive hidden in month but keep consistency
+                            else { renderMonthPane(); renderArchiveList(); }
                             updateStats();
                         }
                     }
@@ -790,7 +986,7 @@
             const idx = completedTasks.findIndex(t => t.id === id);
             if (idx !== -1) {
                 completedTasks.splice(idx, 1);
-                save(); playFeedback();
+                save(); playCompleteSound();
                 if (currentTab === 'today') renderTodayPane();
                 else { renderMonthPane(); renderArchiveList(); }
                 updateStats();
@@ -798,7 +994,7 @@
             e.stopPropagation();
         }
 
-        // Active task listeners (toggle, delete, swipe)
+        // Active task listeners
         function attachActiveListeners() {
             document.querySelectorAll('[data-action="toggle"]').forEach(el => {
                 el.removeEventListener('click', handleToggle);
@@ -808,7 +1004,6 @@
                 el.removeEventListener('click', handleDelete);
                 el.addEventListener('click', handleDelete);
             });
-            // Swipe left/right on active tasks (works in both panes)
             document.querySelectorAll('.task-item').forEach(item => {
                 let touchX = 0;
                 item.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, {passive: true});
@@ -817,12 +1012,12 @@
                     const diff = e.changedTouches[0].clientX - touchX;
                     const id = item.dataset.id;
                     if (Math.abs(diff) > 50) {
-                        if (diff > 0) { // right swipe → complete
+                        if (diff > 0) {
                             const task = activeTasks.find(t => t.id === id);
                             if (task) moveToCompleted(task);
-                        } else { // left swipe → delete
+                        } else {
                             activeTasks = activeTasks.filter(t => t.id !== id);
-                            save(); playFeedback();
+                            save(); playCompleteSound();
                             if (currentTab === 'today') renderTodayPane();
                             else renderMonthPane();
                             updateStats();
@@ -830,7 +1025,6 @@
                     }
                     touchX = 0;
                 });
-                // long press dummy
                 let longPressTimer;
                 item.addEventListener('touchstart', (e) => {
                     longPressTimer = setTimeout(() => { alert('✏️ edit task (demo)'); }, 600);
@@ -845,7 +1039,7 @@
             if (idx !== -1) {
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
-                save(); playFeedback();
+                save(); playCompleteSound(); // play sound + vibrate on complete
                 if (currentTab === 'today') renderTodayPane();
                 else renderMonthPane();
                 updateStats();
@@ -861,20 +1055,66 @@
         function handleDelete(e) {
             const id = e.currentTarget.dataset.id;
             activeTasks = activeTasks.filter(t => t.id !== id);
-            save(); playFeedback();
+            save(); playCompleteSound();
             if (currentTab === 'today') renderTodayPane();
             else renderMonthPane();
             updateStats();
         }
 
-        function playFeedback() { if (navigator.vibrate) navigator.vibrate(30); }
+        // Popup functions
+        function showActivePopup() {
+            const popupList = document.getElementById('activePopupList');
+            if (activeTasks.length === 0) {
+                popupList.innerHTML = '<div class="empty-popup">✨ no active tasks</div>';
+            } else {
+                let html = '';
+                activeTasks.forEach(t => {
+                    html += `
+                        <div class="popup-task-item">
+                            <div class="task-content">${escapeHtml(t.text)}</div>
+                            <div class="popup-meta">
+                                <span class="badge"><i class="fas fa-calendar"></i> ${t.date}</span>
+                                <span class="badge"><i class="fas fa-tag"></i> ${t.category || 'Inbox'}</span>
+                                <span class="badge">${priorityIcon(t.priority)} ${t.priority}</span>
+                                ${t.time ? `<span class="badge"><i class="fas fa-clock"></i> ${t.time}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                popupList.innerHTML = html;
+            }
+            document.getElementById('activePopup').style.display = 'flex';
+        }
+
+        function showCompletedPopup() {
+            const popupList = document.getElementById('completedPopupList');
+            if (completedTasks.length === 0) {
+                popupList.innerHTML = '<div class="empty-popup">✅ no completed tasks</div>';
+            } else {
+                let html = '';
+                completedTasks.slice().reverse().forEach(t => {
+                    html += `
+                        <div class="popup-task-item">
+                            <div class="task-content" style="text-decoration: line-through; color: var(--text-light);">${escapeHtml(t.text)}</div>
+                            <div class="popup-meta">
+                                <span class="badge"><i class="fas fa-calendar"></i> ${t.date}</span>
+                                <span class="badge"><i class="fas fa-tag"></i> ${t.category || 'Inbox'}</span>
+                                <span class="badge">${priorityIcon(t.priority)} ${t.priority}</span>
+                                ${t.time ? `<span class="badge"><i class="fas fa-clock"></i> ${t.time}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                popupList.innerHTML = html;
+            }
+            document.getElementById('completedPopup').style.display = 'flex';
+        }
 
         // quick add
         document.getElementById('quickAddBtn').addEventListener('click', () => {
             const inp = document.getElementById('quickTaskInput');
             const text = inp.value.trim();
             if (!text) return;
-            // For quick add, use the date from current context: if month pane, use selectedDate, else use today
             const targetDate = (currentTab === 'monthly') ? selectedDate : (() => {
                 const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
             })();
@@ -927,19 +1167,59 @@
             document.getElementById('archiveIcon').style.transform = archiveVisible ? 'rotate(90deg)' : 'rotate(0)';
         });
 
-        // month nav
-        document.getElementById('prevMonthBtn').addEventListener('click', () => {
+        // month nav + swipe
+        function prevMonth() {
             if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
-            // Adjust selectedDate to be within new month (first day)
             const firstDayStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;
             selectedDate = firstDayStr;
             renderMonthPane();
-        });
-        document.getElementById('nextMonthBtn').addEventListener('click', () => {
+        }
+
+        function nextMonth() {
             if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
             const firstDayStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;
             selectedDate = firstDayStr;
             renderMonthPane();
+        }
+
+        document.getElementById('prevMonthBtn').addEventListener('click', prevMonth);
+        document.getElementById('nextMonthBtn').addEventListener('click', nextMonth);
+
+        // Swipe for month calendar
+        const calendarSwipe = document.getElementById('monthlyCalendarSwipe');
+        let touchStartX = 0;
+        calendarSwipe.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        }, {passive: true});
+        calendarSwipe.addEventListener('touchend', (e) => {
+            if (!touchStartX) return;
+            const diff = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    prevMonth(); // right swipe → previous month
+                } else {
+                    nextMonth(); // left swipe → next month
+                }
+            }
+            touchStartX = 0;
+        });
+
+        // Popup triggers
+        document.getElementById('activeStatBtn').addEventListener('click', showActivePopup);
+        document.getElementById('completedStatBtn').addEventListener('click', showCompletedPopup);
+        document.getElementById('closeActivePopup').addEventListener('click', () => {
+            document.getElementById('activePopup').style.display = 'none';
+        });
+        document.getElementById('closeCompletedPopup').addEventListener('click', () => {
+            document.getElementById('completedPopup').style.display = 'none';
+        });
+        document.getElementById('activePopup').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('activePopup')) 
+                document.getElementById('activePopup').style.display = 'none';
+        });
+        document.getElementById('completedPopup').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('completedPopup')) 
+                document.getElementById('completedPopup').style.display = 'none';
         });
 
         // init
