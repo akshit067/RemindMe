@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>to‑do · alarms + swipe month</title>
+    <title>to·do · mobile fixed</title>
     <!-- Google Fonts + Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -47,13 +47,15 @@
             overflow: hidden;
             padding: 0;
             margin: 0;
+            position: fixed;
+            width: 100%;
         }
 
         .app {
             max-width: 480px;
             width: 100%;
             height: 100vh;
-            max-height: -webkit-fill-available;
+            height: -webkit-fill-available;
             background: var(--bg-card);
             box-shadow: var(--shadow-md);
             display: flex;
@@ -82,10 +84,11 @@
             box-shadow: 0 8px 20px rgba(42, 92, 138, 0.4);
             border: none;
             cursor: pointer;
-            z-index: 50;
+            z-index: 100;
             transition: transform 0.2s, background 0.2s;
             line-height: 1;
             padding-bottom: 4px;
+            -webkit-tap-highlight-color: transparent;
         }
         .fab:active { transform: scale(0.92); background: var(--primary-light); }
         
@@ -106,6 +109,8 @@
             padding: 0.9rem 1.2rem;
             font-size: 0.95rem;
             color: var(--text-dark);
+            -webkit-appearance: none;
+            appearance: none;
         }
         .quick-add input:focus { outline: 2px solid var(--primary-soft); }
         .quick-add button {
@@ -116,7 +121,9 @@
             padding: 0 1.6rem;
             font-weight: 600;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
+        .quick-add button:active { background: var(--primary-light); }
 
         .header {
             display: flex;
@@ -157,6 +164,7 @@
             box-shadow: var(--shadow-sm);
             cursor: pointer;
             transition: var(--transition);
+            -webkit-tap-highlight-color: transparent;
         }
         .stat-card:active { background: var(--primary-soft); transform: scale(0.97); }
         .stat-card span:first-child {
@@ -172,6 +180,7 @@
             padding: 0 1rem 0.5rem 1rem;
             scrollbar-width: thin;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
 
         /* today header */
@@ -219,8 +228,9 @@
             touch-action: pan-y;
             user-select: none;
             cursor: grab;
+            -webkit-touch-callout: none;
         }
-        .task-item:active { background: #f7faff; cursor: grabbing; }
+        .task-item:active { background: #f7faff; }
         @media (hover: hover) {
             .task-item:hover { box-shadow: var(--shadow-md); border-color: var(--primary-light); }
         }
@@ -239,7 +249,9 @@
             flex-shrink: 0;
             color: var(--primary);
             transition: var(--transition);
+            -webkit-tap-highlight-color: transparent;
         }
+        .task-check:active { background: var(--primary-soft); }
         .task-check.completed {
             background: var(--success);
             border-color: var(--success);
@@ -261,6 +273,7 @@
             margin-top: 4px;
             font-size: 0.75rem;
             color: var(--text-light);
+            flex-wrap: wrap;
         }
         .badge {
             background: var(--primary-soft);
@@ -285,6 +298,7 @@
             padding: 0.8rem;
             cursor: pointer;
             border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
         }
         .task-delete:active { background: #fee2e2; color: var(--danger); }
 
@@ -301,7 +315,9 @@
             cursor: pointer;
             font-weight: 600;
             color: var(--text-dark);
+            -webkit-tap-highlight-color: transparent;
         }
+        .archive-header:active { background: var(--primary-soft); }
         .archive-list {
             display: none;
             flex-direction: column;
@@ -339,6 +355,7 @@
             cursor: pointer;
             border-radius: 50%;
             opacity: 0.7;
+            -webkit-tap-highlight-color: transparent;
         }
         .archive-delete-btn:active { opacity: 1; background: #fee2e2; }
         .archive-item.swipe-left { background: #fee9e7; border-color: var(--danger); }
@@ -351,7 +368,7 @@
             border: 1px solid var(--border-soft);
             margin: 0.2rem 0 1rem;
             box-shadow: var(--shadow-sm);
-            touch-action: pan-x; /* enable horizontal swipes */
+            touch-action: pan-x pinch-zoom;
         }
         .month-header {
             display: flex;
@@ -375,7 +392,9 @@
             font-size: 1.3rem;
             cursor: pointer;
             color: var(--primary);
+            -webkit-tap-highlight-color: transparent;
         }
+        .month-nav button:active { background: var(--primary-soft); }
         .weekdays {
             display: grid;
             grid-template-columns: repeat(7,1fr);
@@ -405,8 +424,9 @@
             cursor: pointer;
             padding: 4px 0;
             transition: 0.1s;
+            -webkit-tap-highlight-color: transparent;
         }
-        .cal-cell:active { background: var(--primary-soft); }
+        .cal-cell:active { background: var(--primary-soft); transform: scale(0.96); }
         .cal-cell.has-tasks { background: #e4edf7; border-color: var(--primary-light); }
         .cal-cell.today { background: var(--primary); color: white; font-weight: 700; }
         .cal-cell.selected { background: #fae1c2; border: 2px solid var(--secondary); }
@@ -453,6 +473,7 @@
             padding: 0.5rem 0;
             border-radius: 40px;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
         .nav-item i { font-size: 1.3rem; }
         .nav-item.active {
@@ -460,6 +481,7 @@
             color: var(--primary);
             font-weight: 600;
         }
+        .nav-item:active { background: var(--primary-soft); }
 
         /* popup modal for active/done tasks */
         .popup-modal {
@@ -501,7 +523,9 @@
             cursor: pointer;
             color: var(--text-light);
             padding: 0 0.5rem;
+            -webkit-tap-highlight-color: transparent;
         }
+        .popup-close:active { color: var(--danger); }
         .popup-task-list {
             overflow-y: auto;
             display: flex;
@@ -547,6 +571,13 @@
         .modal-card {
             background: white; border-radius: 48px; padding: 2rem 1.5rem; max-width:400px;
         }
+        .modal-date { font-weight: 700; font-size: 1.7rem; color: var(--primary); background: var(--primary-soft); padding: 0.8rem 1rem; border-radius: 60px; text-align: center; margin-bottom: 1.2rem; }
+        .modal-input { padding: 1.2rem 1.5rem; border: 2px solid var(--border-soft); border-radius: 60px; font-size: 1rem; width: 100%; margin-bottom: 1rem; -webkit-appearance: none; }
+        .time-picker-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; background: var(--bg-main); padding: 0.8rem 1.2rem; border-radius: 60px; }
+        .modal-actions { display: flex; gap: 0.8rem; justify-content: flex-end; }
+        .modal-btn { background: var(--primary); color: white; border: none; padding: 1rem 2rem; border-radius: 60px; font-weight: 600; font-size: 1rem; cursor: pointer; flex: 1; -webkit-tap-highlight-color: transparent; }
+        .modal-btn.cancel { background: var(--bg-main); color: var(--text-dark); }
+        .modal-btn:active { transform: scale(0.97); opacity: 0.8; }
         .empty-message { text-align: center; color: var(--text-light); padding: 2rem; background: var(--bg-main); border-radius: 40px; }
 
         /* notification permission banner */
@@ -558,7 +589,9 @@
             color: var(--primary);
             border-bottom: 1px solid var(--border-soft);
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
+        .notif-banner:active { background: var(--primary-light); color: white; }
     </style>
 </head>
 <body>
@@ -577,7 +610,7 @@
 
     <!-- quick add -->
     <div class="quick-add">
-        <input type="text" id="quickTaskInput" placeholder="✍️ Write a task...">
+        <input type="text" id="quickTaskInput" placeholder="✍️ Write a task..." enterkeyhint="done">
         <button id="quickAddBtn"><i class="fas fa-plus"></i> Add</button>
     </div>
 
@@ -659,7 +692,7 @@
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate"></div>
-            <input type="text" class="modal-input" id="modalTaskInput" placeholder="e.g., buy milk">
+            <input type="text" class="modal-input" id="modalTaskInput" placeholder="e.g., buy milk" enterkeyhint="done">
             <div class="time-picker-row"><label>⏰</label><input type="time" id="modalTimeInput" value="09:00"></div>
             <div class="modal-actions">
                 <button class="modal-btn cancel" id="modalCancel">Cancel</button>
@@ -673,15 +706,21 @@
     (function() {
         // --- data ---
         let activeTasks = [], completedTasks = [];
-        const STORAGE_KEY = 'todo_alarm_swipe';
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            try {
+        const STORAGE_KEY = 'todo_mobile_fixed';
+        
+        // Load data
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
                 const data = JSON.parse(stored);
                 activeTasks = data.active || [];
                 completedTasks = data.completed || [];
-            } catch (e) { resetSample(); }
-        } else { resetSample(); }
+            } else {
+                resetSample();
+            }
+        } catch (e) {
+            resetSample();
+        }
 
         function resetSample() {
             const today = new Date();
@@ -727,36 +766,37 @@
 
         // --- BEEP + VIBRATION (complete & reminder) ---
         function playCompleteSound() {
-            // vibration
-            if (navigator.vibrate) navigator.vibrate(80);
-            // beep using Web Audio
             try {
+                if (navigator.vibrate) navigator.vibrate(50);
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const resumeAndPlay = () => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-                    osc.frequency.value = 880; // higher pitch for completion
-                    gain.gain.value = 0.25;
+                    osc.frequency.value = 880;
+                    gain.gain.value = 0.2;
                     osc.start();
-                    osc.stop(audioCtx.currentTime + 0.15);
+                    osc.stop(audioCtx.currentTime + 0.1);
                 };
-                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
-                else resumeAndPlay();
-            } catch (e) { console.log('audio not supported'); }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(resumeAndPlay);
+                } else {
+                    resumeAndPlay();
+                }
+            } catch (e) {}
         }
 
         function playReminderSound() {
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             try {
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const resumeAndPlay = () => {
                     const osc1 = audioCtx.createOscillator();
                     const gain1 = audioCtx.createGain();
                     osc1.connect(gain1); gain1.connect(audioCtx.destination);
                     osc1.frequency.value = 660;
-                    gain1.gain.value = 0.3;
+                    gain1.gain.value = 0.2;
                     osc1.start();
                     osc1.stop(audioCtx.currentTime + 0.15);
                     setTimeout(() => {
@@ -764,17 +804,20 @@
                         const gain2 = audioCtx.createGain();
                         osc2.connect(gain2); gain2.connect(audioCtx.destination);
                         osc2.frequency.value = 660;
-                        gain2.gain.value = 0.3;
+                        gain2.gain.value = 0.2;
                         osc2.start();
                         osc2.stop(audioCtx.currentTime + 0.15);
-                    }, 250);
+                    }, 200);
                 };
-                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
-                else resumeAndPlay();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(resumeAndPlay);
+                } else {
+                    resumeAndPlay();
+                }
             } catch (e) {}
         }
 
-        // --- ALARM SYSTEM (reminder even when closed) ---
+        // --- ALARM SYSTEM ---
         function checkReminders() {
             const now = new Date();
             const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
@@ -782,11 +825,9 @@
             
             activeTasks.forEach(task => {
                 if (task.date === todayStr && task.time === currentTime) {
-                    // play sound + vibrate
                     playReminderSound();
-                    // send notification (if permitted)
                     if (Notification.permission === 'granted') {
-                        new Notification('⏰ Task reminder', {
+                        new Notification('⏰ Task Reminder', {
                             body: task.text,
                             icon: 'https://cdn-icons-png.flaticon.com/512/1632/1632597.png'
                         });
@@ -795,17 +836,19 @@
             });
         }
 
-        // Check every 30 seconds (persists even if tab inactive, but for background we rely on service workers? simplified)
+        // Check every 30 seconds
         setInterval(checkReminders, 30000);
-        // also check after 2 sec on load
         setTimeout(checkReminders, 2000);
 
         // helpers
-        function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks })); }
-        function formatDisplay(iso) { const [y,m,d]=iso.split('-'); const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`; }
+        function save() { 
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks })); 
+            } catch (e) {}
+        }
         function activeCountForDate(dateStr) { return activeTasks.filter(t => t.date === dateStr).length; }
 
-        // update stats numbers
+        // update stats
         function updateStats() {
             document.getElementById('activeCount').innerText = activeTasks.length;
             document.getElementById('completedCount').innerText = completedTasks.length;
@@ -814,7 +857,9 @@
             document.getElementById('productivityStat').innerText = percent + '%';
         }
 
-        function escapeHtml(str) { return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); }
+        function escapeHtml(str) { 
+            return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); 
+        }
 
         function priorityIcon(pri) {
             if (pri==='high') return '<i class="fas fa-flag priority-high"></i>';
@@ -831,13 +876,13 @@
             const container = document.getElementById('todayTaskList');
             const filtered = activeTasks.filter(t => t.date === todayStr);
             if (!filtered.length) {
-                container.innerHTML = `<div class="empty-message">✨ no tasks for today</div>`;
+                container.innerHTML = '<div class="empty-message">✨ no tasks for today</div>';
             } else {
                 let html = '';
                 filtered.forEach(t => {
                     const timeDisplay = t.time ? ` ⏰ ${t.time}` : '';
                     html += `
-                        <div class="task-item" data-id="${t.id}" draggable="false">
+                        <div class="task-item" data-id="${t.id}">
                             <div class="task-check" data-id="${t.id}" data-action="toggle"><i class="fas fa-check"></i></div>
                             <div style="flex:1">
                                 <div class="task-content">${escapeHtml(t.text)}${timeDisplay}</div>
@@ -883,13 +928,15 @@
                     const dots = '●'.repeat(Math.min(count, 5));
                     html += `<div class="${cls}" data-date="${dateStr}"><span>${dayNum}</span><span class="task-dots">${dots}</span></div>`;
                 } else {
-                    html += `<div class="cal-cell" style="background:transparent; pointer-events:none;"></div>`;
+                    html += '<div class="cal-cell" style="background:transparent; pointer-events:none;"></div>';
                 }
             }
             grid.innerHTML = html;
 
+            // Attach click handlers
             document.querySelectorAll('#monthGrid .cal-cell[data-date]').forEach(cell => {
-                cell.addEventListener('click', () => {
+                cell.addEventListener('click', (e) => {
+                    e.preventDefault();
                     selectedDate = cell.dataset.date;
                     renderMonthPane();
                 });
@@ -899,13 +946,13 @@
             const monthTaskContainer = document.getElementById('monthTaskList');
             const filtered = activeTasks.filter(t => t.date === selectedDate);
             if (!filtered.length) {
-                monthTaskContainer.innerHTML = `<div class="empty-message">✨ no tasks for this date</div>`;
+                monthTaskContainer.innerHTML = '<div class="empty-message">✨ no tasks for this date</div>';
             } else {
                 let html = '';
                 filtered.forEach(t => {
                     const timeDisplay = t.time ? ` ⏰ ${t.time}` : '';
                     html += `
-                        <div class="task-item" data-id="${t.id}" draggable="false">
+                        <div class="task-item" data-id="${t.id}">
                             <div class="task-check" data-id="${t.id}" data-action="toggle"><i class="fas fa-check"></i></div>
                             <div style="flex:1">
                                 <div class="task-content">${escapeHtml(t.text)}${timeDisplay}</div>
@@ -928,7 +975,7 @@
             const arcContainer = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
             if (!completedTasks.length) {
-                arcContainer.innerHTML = `<div class="empty-message" style="padding:1rem;">no completed tasks</div>`;
+                arcContainer.innerHTML = '<div class="empty-message" style="padding:1rem;">no completed tasks</div>';
             } else {
                 let html = '';
                 completedTasks.slice().reverse().forEach(t => {
@@ -945,23 +992,28 @@
             attachArchiveSwipeAndDelete();
         }
 
-        // Swipe & delete for archive
+        // Archive swipe & delete
         function attachArchiveSwipeAndDelete() {
             document.querySelectorAll('[data-archive-delete="true"]').forEach(btn => {
                 btn.removeEventListener('click', handleArchiveDelete);
                 btn.addEventListener('click', handleArchiveDelete);
             });
+            
             document.querySelectorAll('.archive-item').forEach(item => {
                 let touchX = 0;
                 const id = item.dataset.archiveId;
-                item.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, {passive: true});
+                
+                item.addEventListener('touchstart', (e) => { 
+                    touchX = e.touches[0].clientX; 
+                }, {passive: true});
+                
                 item.addEventListener('touchmove', (e) => {
                     if (!touchX) return;
-                    const moveX = e.touches[0].clientX;
-                    const diff = moveX - touchX;
+                    const diff = e.touches[0].clientX - touchX;
                     if (diff < -20) item.classList.add('swipe-left');
                     else item.classList.remove('swipe-left');
-                });
+                }, {passive: true});
+                
                 item.addEventListener('touchend', (e) => {
                     if (!touchX) return;
                     const diff = e.changedTouches[0].clientX - touchX;
@@ -969,9 +1021,10 @@
                         const idx = completedTasks.findIndex(t => t.id === id);
                         if (idx !== -1) {
                             completedTasks.splice(idx, 1);
-                            save(); playCompleteSound(); // use complete sound for archive delete
+                            save();
+                            playCompleteSound();
                             if (currentTab === 'today') renderTodayPane();
-                            else { renderMonthPane(); renderArchiveList(); }
+                            else renderMonthPane();
                             updateStats();
                         }
                     }
@@ -982,42 +1035,60 @@
         }
 
         function handleArchiveDelete(e) {
+            e.preventDefault();
+            e.stopPropagation();
             const id = e.currentTarget.dataset.archiveId;
             const idx = completedTasks.findIndex(t => t.id === id);
             if (idx !== -1) {
                 completedTasks.splice(idx, 1);
-                save(); playCompleteSound();
+                save();
+                playCompleteSound();
                 if (currentTab === 'today') renderTodayPane();
-                else { renderMonthPane(); renderArchiveList(); }
+                else renderMonthPane();
                 updateStats();
             }
-            e.stopPropagation();
         }
 
         // Active task listeners
         function attachActiveListeners() {
+            // Toggle buttons
             document.querySelectorAll('[data-action="toggle"]').forEach(el => {
                 el.removeEventListener('click', handleToggle);
                 el.addEventListener('click', handleToggle);
             });
+            
+            // Delete buttons
             document.querySelectorAll('[data-action="delete"]').forEach(el => {
                 el.removeEventListener('click', handleDelete);
                 el.addEventListener('click', handleDelete);
             });
+            
+            // Swipe on task items
             document.querySelectorAll('.task-item').forEach(item => {
                 let touchX = 0;
-                item.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, {passive: true});
+                let touchStartTime = 0;
+                
+                item.addEventListener('touchstart', (e) => { 
+                    touchX = e.touches[0].clientX;
+                    touchStartTime = Date.now();
+                }, {passive: true});
+                
                 item.addEventListener('touchend', (e) => {
                     if (!touchX) return;
                     const diff = e.changedTouches[0].clientX - touchX;
-                    const id = item.dataset.id;
-                    if (Math.abs(diff) > 50) {
-                        if (diff > 0) {
+                    const touchDuration = Date.now() - touchStartTime;
+                    
+                    // Only trigger swipe if it's a quick swipe (not a long press)
+                    if (Math.abs(diff) > 40 && touchDuration < 300) {
+                        e.preventDefault();
+                        const id = item.dataset.id;
+                        if (diff > 0) { // right swipe
                             const task = activeTasks.find(t => t.id === id);
                             if (task) moveToCompleted(task);
-                        } else {
+                        } else { // left swipe
                             activeTasks = activeTasks.filter(t => t.id !== id);
-                            save(); playCompleteSound();
+                            save();
+                            playCompleteSound();
                             if (currentTab === 'today') renderTodayPane();
                             else renderMonthPane();
                             updateStats();
@@ -1025,12 +1096,18 @@
                     }
                     touchX = 0;
                 });
+                
+                // Long press for edit
                 let longPressTimer;
                 item.addEventListener('touchstart', (e) => {
-                    longPressTimer = setTimeout(() => { alert('✏️ edit task (demo)'); }, 600);
-                });
+                    longPressTimer = setTimeout(() => { 
+                        alert('✏️ Edit task (demo)'); 
+                    }, 600);
+                }, {passive: true});
+                
                 item.addEventListener('touchend', () => clearTimeout(longPressTimer));
                 item.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+                item.addEventListener('touchcancel', () => clearTimeout(longPressTimer));
             });
         }
 
@@ -1039,7 +1116,8 @@
             if (idx !== -1) {
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
-                save(); playCompleteSound(); // play sound + vibrate on complete
+                save();
+                playCompleteSound();
                 if (currentTab === 'today') renderTodayPane();
                 else renderMonthPane();
                 updateStats();
@@ -1047,15 +1125,18 @@
         }
 
         function handleToggle(e) {
+            e.preventDefault();
             const id = e.currentTarget.dataset.id;
             const task = activeTasks.find(t => t.id === id);
             if (task) moveToCompleted(task);
         }
 
         function handleDelete(e) {
+            e.preventDefault();
             const id = e.currentTarget.dataset.id;
             activeTasks = activeTasks.filter(t => t.id !== id);
-            save(); playCompleteSound();
+            save();
+            playCompleteSound();
             if (currentTab === 'today') renderTodayPane();
             else renderMonthPane();
             updateStats();
@@ -1110,22 +1191,38 @@
             document.getElementById('completedPopup').style.display = 'flex';
         }
 
-        // quick add
+        // Quick add
         document.getElementById('quickAddBtn').addEventListener('click', () => {
             const inp = document.getElementById('quickTaskInput');
             const text = inp.value.trim();
             if (!text) return;
             const targetDate = (currentTab === 'monthly') ? selectedDate : (() => {
-                const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+                const t = new Date(); 
+                return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
             })();
-            activeTasks.push({ id: Date.now()+'-'+Math.random(), text, date: targetDate, time: '12:00', category: 'Inbox', priority: 'medium' });
-            save(); inp.value = '';
+            activeTasks.push({ 
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), 
+                text, 
+                date: targetDate, 
+                time: '12:00', 
+                category: 'Inbox', 
+                priority: 'medium' 
+            });
+            save(); 
+            inp.value = '';
             if (currentTab === 'today') renderTodayPane();
             else renderMonthPane();
             updateStats();
         });
 
-        // tabs
+        // Quick add on enter
+        document.getElementById('quickTaskInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('quickAddBtn').click();
+            }
+        });
+
+        // Tabs
         function switchTab(tab) {
             currentTab = tab;
             document.getElementById('todayPane').style.display = tab === 'today' ? 'block' : 'none';
@@ -1139,7 +1236,7 @@
         document.getElementById('tabToday').addEventListener('click', () => switchTab('today'));
         document.getElementById('tabMonthly').addEventListener('click', () => switchTab('monthly'));
 
-        // modal (FAB)
+        // Modal (FAB)
         const modal = document.getElementById('modalOverlay');
         document.getElementById('fabBtn').addEventListener('click', () => {
             document.getElementById('modalDate').innerText = `📅 ${selectedDate}`;
@@ -1147,36 +1244,66 @@
             document.getElementById('modalTimeInput').value = '09:00';
             modal.style.display = 'flex';
         });
-        document.getElementById('modalCancel').addEventListener('click', () => modal.style.display = 'none');
+
+        document.getElementById('modalCancel').addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
         document.getElementById('modalAdd').addEventListener('click', () => {
             const inp = document.getElementById('modalTaskInput');
             const text = inp.value.trim();
             if (!text) return;
             const time = document.getElementById('modalTimeInput').value;
-            activeTasks.push({ id: Date.now()+'-'+Math.random(), text, date: selectedDate, time, category: 'Inbox', priority: 'medium' });
-            save(); inp.value = ''; modal.style.display = 'none';
+            activeTasks.push({ 
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6), 
+                text, 
+                date: selectedDate, 
+                time, 
+                category: 'Inbox', 
+                priority: 'medium' 
+            });
+            save(); 
+            inp.value = ''; 
+            modal.style.display = 'none';
             if (currentTab === 'today') renderTodayPane();
             else renderMonthPane();
             updateStats();
         });
 
-        // archive toggle
+        // Close modal on overlay click
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modalOverlay')) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Archive toggle
         document.getElementById('archiveToggle').addEventListener('click', () => {
             archiveVisible = !archiveVisible;
             document.getElementById('archiveListContainer').classList.toggle('visible', archiveVisible);
             document.getElementById('archiveIcon').style.transform = archiveVisible ? 'rotate(90deg)' : 'rotate(0)';
         });
 
-        // month nav + swipe
+        // Month navigation
         function prevMonth() {
-            if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
+            if (currentMonth === 0) { 
+                currentMonth = 11; 
+                currentYear--; 
+            } else { 
+                currentMonth--; 
+            }
             const firstDayStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;
             selectedDate = firstDayStr;
             renderMonthPane();
         }
 
         function nextMonth() {
-            if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
+            if (currentMonth === 11) { 
+                currentMonth = 0; 
+                currentYear++; 
+            } else { 
+                currentMonth++; 
+            }
             const firstDayStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;
             selectedDate = firstDayStr;
             renderMonthPane();
@@ -1188,17 +1315,19 @@
         // Swipe for month calendar
         const calendarSwipe = document.getElementById('monthlyCalendarSwipe');
         let touchStartX = 0;
+        
         calendarSwipe.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
         }, {passive: true});
+        
         calendarSwipe.addEventListener('touchend', (e) => {
             if (!touchStartX) return;
             const diff = e.changedTouches[0].clientX - touchStartX;
             if (Math.abs(diff) > 50) {
                 if (diff > 0) {
-                    prevMonth(); // right swipe → previous month
+                    prevMonth();
                 } else {
-                    nextMonth(); // left swipe → next month
+                    nextMonth();
                 }
             }
             touchStartX = 0;
@@ -1207,27 +1336,37 @@
         // Popup triggers
         document.getElementById('activeStatBtn').addEventListener('click', showActivePopup);
         document.getElementById('completedStatBtn').addEventListener('click', showCompletedPopup);
+        
         document.getElementById('closeActivePopup').addEventListener('click', () => {
             document.getElementById('activePopup').style.display = 'none';
         });
+        
         document.getElementById('closeCompletedPopup').addEventListener('click', () => {
             document.getElementById('completedPopup').style.display = 'none';
         });
+        
+        // Close popups on overlay click
         document.getElementById('activePopup').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('activePopup')) 
+            if (e.target === document.getElementById('activePopup')) {
                 document.getElementById('activePopup').style.display = 'none';
+            }
         });
+        
         document.getElementById('completedPopup').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('completedPopup')) 
+            if (e.target === document.getElementById('completedPopup')) {
                 document.getElementById('completedPopup').style.display = 'none';
+            }
         });
 
-        // init
+        // Initialize
         (function init() {
             const today = new Date();
             selectedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-            currentYear = today.getFullYear(); currentMonth = today.getMonth();
-            renderTodayPane(); renderMonthPane(); updateStats();
+            currentYear = today.getFullYear();
+            currentMonth = today.getMonth();
+            renderTodayPane();
+            renderMonthPane();
+            updateStats();
             switchTab('today');
         })();
     })();
