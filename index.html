@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · time + beep</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>to‑do · week ⇄ month</title>
     <style>
         * {
             margin: 0;
@@ -17,27 +17,44 @@
             background: #f5f7fb;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
-            padding: 0 0 20px 0;
+            height: 100vh;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
         }
 
         .app {
             max-width: 480px;
             width: 100%;
+            height: 100vh;
+            max-height: -webkit-fill-available;
             background: white;
-            border-radius: 32px 32px 28px 28px;
-            box-shadow: 0 15px 30px rgba(0, 15, 30, 0.1);
-            margin: 12px 12px 20px 12px;
-            padding: 1.5rem 1rem 1.8rem 1rem;
+            box-shadow: 0 0 30px rgba(0, 15, 30, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 0;
+            margin: 0;
+            padding: 0 1rem 0.5rem 1rem;
+        }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.2rem 0 0.2rem 0;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
         }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding: 0 0.2rem;
+            margin: 0.5rem 0 0.2rem 0;
+            padding: 0;
+            flex-shrink: 0;
         }
 
         .title-area h1 {
@@ -47,103 +64,94 @@
             background: linear-gradient(145deg, #1f3449, #2b4f74);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
 
         .plus-btn {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             background: #1f3449;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 10px 18px rgba(25, 55, 80, 0.25);
+            box-shadow: 0 8px 16px rgba(25, 55, 80, 0.3);
             border: none;
             transition: 0.1s;
-            -webkit-user-select: none;
-            user-select: none;
+            flex-shrink: 0;
         }
 
         .plus-btn:active {
             background: #2b4f74;
-            transform: scale(0.96);
+            transform: scale(0.94);
         }
 
+        /* professional stats row */
         .stats-row {
             display: flex;
-            flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 1.8rem;
+            margin: 0.6rem 0 1rem 0;
+            flex-shrink: 0;
         }
 
         .stat-card {
-            flex: 1 1 100px;
-            background: #ecf3fa;
-            border-radius: 30px;
-            padding: 0.8rem 0.2rem;
+            flex: 1;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 0.7rem 0.1rem;
             text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1e3b5a;
-            border: 1px solid #bed3ea;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #25435f;
+            border: 1px solid #e2eaf3;
             display: flex;
             flex-direction: column;
             align-items: center;
-            line-height: 1.4;
+            box-shadow: 0 4px 10px rgba(0, 20, 40, 0.02);
         }
 
         .stat-card span:first-child {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #1d3f62;
+            color: #1a3750;
+            line-height: 1.2;
         }
 
         .section-title {
             font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0 0 0.6rem 0.5rem;
+            font-size: 1.1rem;
+            margin: 0 0 0.4rem 0.2rem;
             color: #1e3b5a;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-        }
-
-        .section-title i {
-            color: #e67e22;
+            gap: 0.3rem;
         }
 
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            margin-bottom: 1.8rem;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 4px;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .task-item {
             background: white;
             border: 1px solid #dee9f2;
-            border-radius: 60px;
-            padding: 0.4rem 0.4rem 0.4rem 1.2rem;
+            border-radius: 50px;
+            padding: 0.2rem 0.2rem 0.2rem 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
-        .task-item:active {
-            background: #f7faff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.01);
         }
 
         .task-check {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 30px;
             border: 2.5px solid #b6cde5;
             background: white;
@@ -155,123 +163,78 @@
             flex-shrink: 0;
         }
 
-        .task-check.completed {
-            background: #1f8b4c;
-            border-color: #0f682f;
-            color: white;
-        }
-
         .task-content {
             flex: 1;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
             color: #1a3146;
             word-break: break-word;
-            padding: 0.4rem 0;
+            padding: 0.3rem 0;
         }
 
         .date-badge {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             background: #eaf1fa;
-            padding: 0.25rem 0.8rem;
+            padding: 0.2rem 0.7rem;
             border-radius: 30px;
-            margin-left: 0.5rem;
+            margin-left: 0.3rem;
             font-weight: 400;
             color: #2b4f74;
             white-space: nowrap;
-        }
-
-        .reminder-badge {
-            font-size: 0.7rem;
-            background: #fff0d9;
-            padding: 0.25rem 0.6rem;
-            border-radius: 30px;
-            margin-left: 0.3rem;
-            color: #b45f1b;
-            font-weight: 500;
         }
 
         .task-delete {
             background: transparent;
             border: none;
             color: #9bb3cf;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             padding: 0.6rem 1rem 0.6rem 0.2rem;
             cursor: pointer;
-        }
-
-        .task-delete:active {
-            color: #c03d2e;
-        }
-
-        .empty-message {
-            text-align: center;
-            color: #8ba3c2;
-            padding: 1.8rem 1rem;
-            background: #f6faff;
-            border-radius: 50px;
-            font-size: 0.95rem;
         }
 
         .archive-header {
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            background: #e3ecf5;
-            padding: 1rem 1.2rem;
+            background: #eef4fa;
+            padding: 0.8rem 1.2rem;
             border-radius: 40px;
-            margin: 1rem 0 0.6rem;
+            margin: 0.8rem 0 0.5rem;
             border: 1px solid #c5d8f0;
             cursor: pointer;
             font-weight: 600;
             color: #1f3f60;
-            -webkit-user-select: none;
-        }
-
-        .archive-header i {
-            font-size: 1.1rem;
-            transition: transform 0.2s;
-        }
-
-        .archive-header .rotate {
-            transform: rotate(90deg);
+            flex-shrink: 0;
         }
 
         .archive-list {
             display: none;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            max-height: 200px;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+            max-height: 140px;
             overflow-y: auto;
+            flex-shrink: 0;
         }
-
-        .archive-list.visible {
-            display: flex;
-        }
+        .archive-list.visible { display: flex; }
 
         .archive-item {
-            background: #f1f7fd;
+            background: #f4faff;
             border: 1px dashed #adc5e2;
             border-radius: 40px;
-            padding: 0.7rem 1.2rem;
-            display: flex;
-            align-items: center;
+            padding: 0.6rem 1.2rem;
             opacity: 0.85;
         }
 
-        .archive-item .task-content {
-            text-decoration: line-through;
-            color: #4f6f91;
-        }
-
+        /* ---------- CALENDAR CARD (shared) ---------- */
         .calendar-card {
             background: white;
             border-radius: 32px;
-            padding: 1.2rem 0.8rem 1rem;
+            padding: 0.8rem 0.5rem 0.6rem;
             border: 1px solid #dae6f2;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-            margin: 0.5rem 0 0.8rem;
+            margin: 0.4rem 0 0.5rem;
+            flex-shrink: 0;
+            touch-action: pan-y pinch-zoom;
         }
 
         .selected-date-row {
@@ -279,48 +242,57 @@
             align-items: center;
             justify-content: space-between;
             background: #f2f8ff;
-            padding: 0.8rem 1.2rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 50px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.7rem;
             font-weight: 600;
             color: #1e3f60;
         }
-
-        .selected-date-row span:last-child {
-            background: white;
-            padding: 0.3rem 1.2rem;
+        /* make the 📅 icon clickable */
+        .calendar-toggle-icon {
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
             border-radius: 30px;
-            font-size: 1rem;
+            transition: background 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .calendar-toggle-icon:active {
+            background: #d9e6f5;
         }
 
         .cal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             padding: 0 0.2rem;
         }
 
         .cal-month {
             font-weight: 700;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #1d3f62;
         }
 
+        .cal-nav {
+            display: flex;
+            gap: 8px;
+        }
         .cal-nav button {
-            background: transparent;
+            background: white;
             border: 1px solid #c9d9ee;
-            padding: 0.4rem 1.2rem;
+            width: 44px;
+            height: 44px;
             border-radius: 40px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
             color: #1e3f60;
-            margin-left: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .cal-nav button:active {
-            background: #dae6f2;
-        }
+        .cal-nav button:active { background: #dae6f2; }
 
         .weekdays {
             display: grid;
@@ -328,15 +300,18 @@
             text-align: center;
             font-weight: 600;
             color: #38658f;
-            margin-bottom: 0.3rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            margin: 0.2rem 0;
         }
 
-        .month-grid {
+        /* both week-grid and month-grid share cell style */
+        .week-grid, .month-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
+            gap: 4px;
+            transition: 0.1s;
         }
+        .month-grid { margin-bottom: 0.2rem; }
 
         .cal-cell {
             aspect-ratio: 1/1;
@@ -352,13 +327,11 @@
             border: 1px solid transparent;
             cursor: pointer;
             padding: 4px 0;
-            transition: background-color 0.05s;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .cal-cell:active {
             background: #d9e6f5;
-            transform: scale(0.98);
+            transform: scale(0.96);
         }
 
         .cal-cell.has-tasks {
@@ -384,12 +357,25 @@
             letter-spacing: 1.5px;
             color: #2b4f74;
             margin-top: 2px;
+            line-height: 1;
+        }
+        .today .task-dots { color: #ffddb0; }
+
+        .footer-btn {
+            background: transparent;
+            border: 1.5px solid #c4d6ec;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            color: #1d4569;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin: 0.5rem 0 0.2rem;
+            width: 100%;
+            flex-shrink: 0;
         }
 
-        .today .task-dots {
-            color: #ffddb0;
-        }
-
+        /* modal unchanged */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -408,96 +394,14 @@
             max-width: 400px;
             border-radius: 48px;
             padding: 2rem 1.5rem;
-            box-shadow: 0 30px 50px rgba(0,10,30,0.2);
         }
-
-        .modal-date {
-            font-weight: 700;
-            font-size: 1.7rem;
-            color: #1d3f62;
-            background: #e9f2fc;
-            padding: 0.8rem 1rem;
-            border-radius: 60px;
-            text-align: center;
-            margin-bottom: 1.2rem;
-        }
-
-        .modal-input {
-            padding: 1.2rem 1.5rem;
-            border: 2px solid #c9d9ee;
-            border-radius: 60px;
-            font-size: 1rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .time-picker-row {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            background: #f2f8ff;
-            padding: 0.8rem 1.2rem;
-            border-radius: 60px;
-        }
-
-        .time-picker-row label {
-            font-weight: 600;
-            color: #1e3f60;
-        }
-
-        .time-picker-row input {
-            flex: 1;
-            padding: 0.7rem;
-            border: 1px solid #bed3ea;
-            border-radius: 40px;
-            font-size: 1rem;
-            background: white;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.8rem;
-            justify-content: flex-end;
-        }
-
-        .modal-btn {
-            background: #1f3449;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .modal-btn.cancel {
-            background: #e2eaf3;
-            color: #1d3f62;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.97);
-        }
-
-        .footer-btn {
-            background: transparent;
-            border: 1.5px solid #c4d6ec;
-            padding: 0.9rem 1.8rem;
-            border-radius: 60px;
-            color: #1d4569;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 1rem;
-            width: 100%;
-        }
-
-        .footer-btn:active {
-            background: #ecf3fa;
-        }
+        .modal-date { font-weight: 700; font-size: 1.7rem; color: #1d3f62; background: #e9f2fc; padding: 0.8rem 1rem; border-radius: 60px; text-align: center; margin-bottom: 1.2rem; }
+        .modal-input { padding: 1.2rem 1.5rem; border: 2px solid #c9d9ee; border-radius: 60px; font-size: 1rem; width: 100%; margin-bottom: 1rem; }
+        .time-picker-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; background: #f2f8ff; padding: 0.8rem 1.2rem; border-radius: 60px; }
+        .modal-actions { display: flex; gap: 0.8rem; justify-content: flex-end; }
+        .modal-btn { background: #1f3449; color: white; border: none; padding: 1rem 2rem; border-radius: 60px; font-weight: 600; font-size: 1rem; cursor: pointer; flex: 1; }
+        .modal-btn.cancel { background: #e2eaf3; color: #1d3f62; }
+        .empty-message { text-align: center; color: #8ba3c2; padding: 1.2rem 1rem; background: #f6faff; border-radius: 50px; font-size: 0.9rem; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -514,36 +418,39 @@
         <div class="stat-card"><span id="monthCount">0</span> this month</div>
     </div>
 
-    <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading"></span></div>
-    <div id="activeTaskList" class="task-list"></div>
+    <div class="scrollable-content">
+        <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading"></span></div>
+        <div id="activeTaskList" class="task-list"></div>
 
-    <div class="archive-header" id="archiveToggle">
-        <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
-    </div>
-    <div id="archiveListContainer" class="archive-list"></div>
-
-    <!-- month-only calendar -->
-    <div class="calendar-card">
-        <div class="selected-date-row">
-            <span>📅</span>
-            <span id="selectedDateDisplay"></span>
+        <div class="archive-header" id="archiveToggle">
+            <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
         </div>
-        <div class="cal-header">
-            <span class="cal-month" id="monthYearDisplay"></span>
-            <div class="cal-nav">
-                <button id="prevBtn">←</button>
-                <button id="nextBtn">→</button>
+        <div id="archiveListContainer" class="archive-list"></div>
+
+        <!-- Calendar card – toggle view by clicking 📅 -->
+        <div class="calendar-card" id="calendarSwipeArea">
+            <div class="selected-date-row">
+                <span class="calendar-toggle-icon" id="toggleViewIcon">📅</span>
+                <span id="selectedDateDisplay"></span>
             </div>
+            <div class="cal-header">
+                <span class="cal-month" id="monthYearDisplay"></span>
+                <div class="cal-nav">
+                    <button id="prevBtn">←</button>
+                    <button id="nextBtn">→</button>
+                </div>
+            </div>
+            <div class="weekdays">
+                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+            </div>
+            <!-- dynamic container: week or month -->
+            <div id="calendarDynamicGrid" class="week-grid"></div>
         </div>
-        <div class="weekdays">
-            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-        </div>
-        <div id="calendarGrid" class="month-grid"></div>
+
+        <button class="footer-btn" id="clearArchiveBtn">🗑️ CLEAR ARCHIVE</button>
     </div>
 
-    <button class="footer-btn" id="clearArchiveBtn">🗑️ CLEAR ARCHIVE</button>
-
-    <!-- modal with time picker -->
+    <!-- modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate"></div>
@@ -562,11 +469,9 @@
 
 <script>
     (function() {
-        // --- data: active & completed (with time) ---
-        let activeTasks = [];
-        let completedTasks = [];
-
-        const STORAGE_KEY = 'todo_time_beep';
+        // --- data ---
+        let activeTasks = [], completedTasks = [];
+        const STORAGE_KEY = 'todo_toggle_weekmonth';
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             try {
@@ -574,9 +479,7 @@
                 activeTasks = data.active || [];
                 completedTasks = data.completed || [];
             } catch (e) { resetSample(); }
-        } else {
-            resetSample();
-        }
+        } else { resetSample(); }
 
         function resetSample() {
             const today = new Date();
@@ -598,142 +501,141 @@
         // state
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
-        // auto-select today
-        const today = new Date();
-        let selectedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        let baseDate = new Date();         // for week anchor (sunday)
+        baseDate.setDate(baseDate.getDate() - baseDate.getDay()); // go to week start
+
+        let selectedDate = (() => {
+            const t = new Date();
+            return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+        })();
 
         let archiveVisible = false;
+        let viewMode = 'week';             // 'week' or 'month'
 
-        // ---------- feedback (vibrate + beep) ----------
+        // ---------- helpers ----------
+        function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks })); }
+        function formatDisplay(iso) { const [y,m,d]=iso.split('-'); const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`; }
+        function activeCountForDate(dateStr) { return activeTasks.filter(t => t.date === dateStr).length; }
+
+        // ---------- reminder & feedback ----------
         function playFeedback(type = 'reminder') {
-            // vibration
             if (navigator.vibrate) {
-                if (type === 'reminder') {
-                    navigator.vibrate([200, 100, 200]); // double pulse for reminder
-                } else if (type === 'complete') {
-                    navigator.vibrate(80); // short for completion
-                }
+                if (type === 'reminder') navigator.vibrate([200, 100, 200]);
+                else if (type === 'complete') navigator.vibrate(80);
             }
-            
-            // beep using Web Audio
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
                 const resumeAndPlay = () => {
                     if (type === 'reminder') {
-                        // two quick beeps
-                        const osc1 = audioCtx.createOscillator();
-                        const gain1 = audioCtx.createGain();
-                        osc1.connect(gain1);
-                        gain1.connect(audioCtx.destination);
-                        osc1.frequency.value = 880;
-                        gain1.gain.value = 0.3;
-                        osc1.start();
-                        osc1.stop(audioCtx.currentTime + 0.15);
-                        
+                        const osc1 = audioCtx.createOscillator(); const gain1 = audioCtx.createGain();
+                        osc1.connect(gain1); gain1.connect(audioCtx.destination);
+                        osc1.frequency.value = 880; gain1.gain.value = 0.3;
+                        osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
                         setTimeout(() => {
-                            const osc2 = audioCtx.createOscillator();
-                            const gain2 = audioCtx.createGain();
-                            osc2.connect(gain2);
-                            gain2.connect(audioCtx.destination);
-                            osc2.frequency.value = 880;
-                            gain2.gain.value = 0.3;
-                            osc2.start();
-                            osc2.stop(audioCtx.currentTime + 0.15);
+                            const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
+                            osc2.connect(gain2); gain2.connect(audioCtx.destination);
+                            osc2.frequency.value = 880; gain2.gain.value = 0.3;
+                            osc2.start(); osc2.stop(audioCtx.currentTime + 0.15);
                         }, 250);
                     } else if (type === 'complete') {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.frequency.value = 800;
-                        gain.gain.value = 0.25;
-                        osc.start();
-                        osc.stop(audioCtx.currentTime + 0.12);
+                        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                        osc.connect(gain); gain.connect(audioCtx.destination);
+                        osc.frequency.value = 800; gain.gain.value = 0.25;
+                        osc.start(); osc.stop(audioCtx.currentTime + 0.12);
                     }
                 };
-                
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(resumeAndPlay);
-                } else {
-                    resumeAndPlay();
-                }
-            } catch (e) {
-                console.log('Audio not supported');
-            }
+                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
+                else resumeAndPlay();
+            } catch (e) {}
         }
 
-        // ---------- reminder check (every 30 seconds) ----------
-        function checkReminders() {
+        setInterval(() => {
             const now = new Date();
-            const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-            
-            let triggered = false;
-            activeTasks.forEach(task => {
-                if (task.date === todayStr && task.time === currentTime) {
-                    triggered = true;
-                }
-            });
-            
-            if (triggered) {
-                playFeedback('reminder');
-            }
-        }
+            const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            if (activeTasks.some(t => t.date === todayStr && t.time === currentTime)) playFeedback('reminder');
+        }, 30000);
+        setTimeout(() => playFeedback('reminder'), 2000);
 
-        // start reminder interval (every 30 seconds)
-        setInterval(checkReminders, 30000);
-        // also check after 2 seconds on load
-        setTimeout(checkReminders, 2000);
-
-        // helpers
-        function save() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks }));
-        }
-
-        function formatDisplay(iso) {
-            const [y,m,d] = iso.split('-');
-            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
-        }
-
-        function activeCountForDate(dateStr) {
-            return activeTasks.filter(t => t.date === dateStr).length;
-        }
-
-        // --- render calendar (month only) ---
+        // ---------- render dynamic grid based on viewMode ----------
         function renderCalendar() {
             const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-            document.getElementById('monthYearDisplay').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+            let titleMonth = currentMonth, titleYear = currentYear;
+            if (viewMode === 'week') {
+                // derive month/year from baseDate (first day of week)
+                const week = getWeekDays(baseDate);
+                titleMonth = week[0].getMonth();
+                titleYear = week[0].getFullYear();
+            }
+            document.getElementById('monthYearDisplay').innerText = `${monthNames[titleMonth]} ${titleYear}`;
             document.getElementById('selectedDateDisplay').innerText = formatDisplay(selectedDate);
             document.getElementById('selectedDateHeading').innerText = selectedDate;
 
-            const grid = document.getElementById('calendarGrid');
-            renderMonth(grid);
-            attachCellEvents();
+            const container = document.getElementById('calendarDynamicGrid');
+            if (viewMode === 'week') {
+                container.className = 'week-grid';
+                renderWeekGrid(container);
+            } else {
+                container.className = 'month-grid';
+                renderMonthGrid(container);
+            }
+            attachCellListeners();
         }
 
-        function renderMonth(container) {
-            container.className = 'month-grid';
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay(); // 0 sun
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            const todayDate = new Date();
-            const isCurrentMonth = (todayDate.getFullYear() === currentYear && todayDate.getMonth() === currentMonth);
+        // week grid based on baseDate
+        function getWeekDays(refDate) {
+            const start = new Date(refDate);
+            start.setHours(0,0,0,0);
+            const day = start.getDay();
+            start.setDate(start.getDate() - day);
+            const week = [];
+            for (let i=0; i<7; i++) {
+                const d = new Date(start);
+                d.setDate(start.getDate() + i);
+                week.push(d);
+            }
+            return week;
+        }
 
+        function renderWeekGrid(container) {
+            const week = getWeekDays(baseDate);
+            const today = new Date();
+            let html = '';
+            week.forEach(date => {
+                const y = date.getFullYear();
+                const m = String(date.getMonth()+1).padStart(2,'0');
+                const d = String(date.getDate()).padStart(2,'0');
+                const dateStr = `${y}-${m}-${d}`;
+                const count = activeCountForDate(dateStr);
+                const isToday = date.toDateString() === today.toDateString();
+                const isSelected = (dateStr === selectedDate);
+                let cls = 'cal-cell';
+                if (count > 0) cls += ' has-tasks';
+                if (isToday) cls += ' today';
+                if (isSelected) cls += ' selected';
+                const dots = '●'.repeat(Math.min(count, 5));
+                html += `<div class="${cls}" data-date="${dateStr}"><span>${date.getDate()}</span><span class="task-dots">${dots}</span></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderMonthGrid(container) {
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            const isCurrentMonth = (today.getFullYear() === currentYear && today.getMonth() === currentMonth);
             let html = '';
             for (let i = 0; i < 42; i++) {
                 const dayNum = i - firstDay + 1;
                 if (dayNum > 0 && dayNum <= daysInMonth) {
                     const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
                     const count = activeCountForDate(dateStr);
-                    const isToday = isCurrentMonth && dayNum === todayDate.getDate();
+                    const isToday = isCurrentMonth && dayNum === today.getDate();
                     const isSelected = (dateStr === selectedDate);
-                    
                     let cls = 'cal-cell';
                     if (count > 0) cls += ' has-tasks';
                     if (isToday) cls += ' today';
                     if (isSelected) cls += ' selected';
-
                     const dots = '●'.repeat(Math.min(count, 5));
                     html += `<div class="${cls}" data-date="${dateStr}"><span>${dayNum}</span><span class="task-dots">${dots}</span></div>`;
                 } else {
@@ -743,25 +645,73 @@
             container.innerHTML = html;
         }
 
-        function attachCellEvents() {
+        function attachCellListeners() {
             document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
-                cell.addEventListener('click', (e) => {
-                    const date = cell.dataset.date;
-                    if (date) {
-                        selectedDate = date;
-                        renderCalendar();
-                        renderActiveList();
-                    }
-                });
+                cell.removeEventListener('click', cellClickHandler);
+                cell.addEventListener('click', cellClickHandler);
             });
         }
+        function cellClickHandler(e) {
+            const date = e.currentTarget.dataset.date;
+            if (date) {
+                selectedDate = date;
+                renderCalendar();
+                renderActiveList();
+            }
+        }
 
-        // render active tasks for selected date
+        // navigation (both modes)
+        function navigate(direction) {
+            if (viewMode === 'week') {
+                baseDate.setDate(baseDate.getDate() + direction * 7);
+                baseDate = new Date(baseDate);
+                currentMonth = baseDate.getMonth();
+                currentYear = baseDate.getFullYear();
+            } else {
+                if (direction === 1) { // next month
+                    if (currentMonth === 11) { currentMonth = 0; currentYear++; }
+                    else currentMonth++;
+                } else {
+                    if (currentMonth === 0) { currentMonth = 11; currentYear--; }
+                    else currentMonth--;
+                }
+                // also align baseDate near first week of month? keep week consistent: set baseDate to first sunday of month
+                const firstOfMonth = new Date(currentYear, currentMonth, 1);
+                baseDate = new Date(firstOfMonth);
+                baseDate.setDate(firstOfMonth.getDate() - firstOfMonth.getDay()); // go to sunday
+            }
+            renderCalendar();
+            renderActiveList();
+        }
+
+        // toggle mode when clicking 📅 icon
+        function toggleViewMode() {
+            viewMode = (viewMode === 'week' ? 'month' : 'week');
+            // sync month/year from selected date if needed
+            if (viewMode === 'month') {
+                const [y,m] = selectedDate.split('-').map(Number);
+                currentYear = y;
+                currentMonth = m - 1;
+                // set baseDate to first week of that month (for consistency when switching back)
+                const first = new Date(currentYear, currentMonth, 1);
+                baseDate = new Date(first);
+                baseDate.setDate(first.getDate() - first.getDay());
+            } else {
+                // week mode: ensure baseDate is around selected date
+                const sel = new Date(selectedDate);
+                baseDate = new Date(sel);
+                baseDate.setDate(sel.getDate() - sel.getDay());
+                currentMonth = baseDate.getMonth();
+                currentYear = baseDate.getFullYear();
+            }
+            renderCalendar();
+        }
+
+        // active tasks & archive
         function renderActiveList() {
             const container = document.getElementById('activeTaskList');
             const filtered = activeTasks.filter(t => t.date === selectedDate);
-            
-            if (filtered.length === 0) {
+            if (!filtered.length) {
                 container.innerHTML = `<div class="empty-message">✨ no active tasks for this date</div>`;
             } else {
                 let html = '';
@@ -784,37 +734,26 @@
         function renderArchive() {
             const container = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
-            if (completedTasks.length === 0) {
+            if (!completedTasks.length) {
                 container.innerHTML = `<div class="empty-message" style="padding:1rem;">no completed tasks</div>`;
             } else {
                 let html = '';
                 completedTasks.slice().reverse().forEach(t => {
                     const timeDisplay = t.time ? ` ⏰ ${t.time}` : '';
-                    html += `
-                        <div class="archive-item">
-                            <div class="task-content">${escapeHtml(t.text)}${timeDisplay}<span class="date-badge">${t.date}</span></div>
-                        </div>
-                    `;
+                    html += `<div class="archive-item"><div class="task-content">${escapeHtml(t.text)}${timeDisplay}<span class="date-badge">${t.date}</span></div></div>`;
                 });
                 container.innerHTML = html;
             }
         }
 
-        function escapeHtml(str) {
-            return str.replace(/[&<>"]/g, m => {
-                if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; if (m === '"') return '&quot;';
-                return m;
-            });
-        }
+        function escapeHtml(str) { return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); }
 
         function attachActiveListeners() {
             document.querySelectorAll('[data-action="toggle"]').forEach(el => {
-                el.removeEventListener('click', handleToggle);
-                el.addEventListener('click', handleToggle);
+                el.removeEventListener('click', handleToggle); el.addEventListener('click', handleToggle);
             });
             document.querySelectorAll('[data-action="delete"]').forEach(el => {
-                el.removeEventListener('click', handleDelete);
-                el.addEventListener('click', handleDelete);
+                el.removeEventListener('click', handleDelete); el.addEventListener('click', handleDelete);
             });
         }
 
@@ -824,22 +763,15 @@
             if (idx !== -1) {
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
-                save();
-                playFeedback('complete');
-                renderCalendar();
-                renderActiveList();
-                renderArchive();
-                updateStats();
+                save(); playFeedback('complete');
+                renderCalendar(); renderActiveList(); renderArchive(); updateStats();
             }
         }
 
         function handleDelete(e) {
             const id = e.currentTarget.dataset.id;
             activeTasks = activeTasks.filter(t => t.id !== id);
-            save();
-            renderCalendar();
-            renderActiveList();
-            updateStats();
+            save(); renderCalendar(); renderActiveList(); updateStats();
         }
 
         function updateStats() {
@@ -858,54 +790,46 @@
             document.getElementById('modalOverlay').style.display = 'flex';
             setTimeout(() => document.getElementById('modalTaskInput').focus(), 100);
         }
-        function closeModal() {
-            document.getElementById('modalOverlay').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
         function addTaskFromModal() {
             const inp = document.getElementById('modalTaskInput');
             const text = inp.value.trim();
-            if (!text) { alert('enter task'); return; }
+            if (!text) return;
             const time = document.getElementById('modalTimeInput').value;
-
-            activeTasks.push({
-                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-                text: text,
-                date: selectedDate,
-                time: time || null,
-            });
-
-            save();
-            inp.value = '';
-            closeModal();
-            renderCalendar();
-            renderActiveList();
-        }
-
-        // navigation
-        function prev() {
-            if (currentMonth === 0) { currentMonth = 11; currentYear--; }
-            else currentMonth--;
-            renderCalendar();
-            renderActiveList();
-        }
-        function next() {
-            if (currentMonth === 11) { currentMonth = 0; currentYear++; }
-            else currentMonth++;
-            renderCalendar();
-            renderActiveList();
+            activeTasks.push({ id: Date.now()+'-'+Math.random().toString(36).substr(2,6), text, date: selectedDate, time: time||null });
+            save(); inp.value = ''; closeModal(); renderCalendar(); renderActiveList();
         }
 
         function clearArchive() {
             if (completedTasks.length && confirm('Permanently delete all completed tasks?')) {
-                completedTasks = [];
-                save();
-                renderArchive();
-                updateStats();
+                completedTasks = []; save(); renderArchive(); updateStats();
             }
         }
 
+        // swipe for week mode only? we keep swipe for week, but also handle simple prev/next buttons for month.
+        const swipeArea = document.getElementById('calendarSwipeArea');
+        let touchStartX = 0;
+        swipeArea.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+        swipeArea.addEventListener('touchend', (e) => {
+            if (!touchStartX) return;
+            const diff = e.changedTouches[0].screenX - touchStartX;
+            const threshold = 40;
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0) navigate(-1); // prev
+                else navigate(1);            // next
+            }
+            touchStartX = 0;
+        });
+
         // init
         window.addEventListener('DOMContentLoaded', () => {
+            // set initial baseDate to week of today
+            const today = new Date();
+            baseDate = new Date(today);
+            baseDate.setDate(today.getDate() - today.getDay());
+            currentMonth = baseDate.getMonth();
+            currentYear = baseDate.getFullYear();
+
             renderCalendar();
             renderActiveList();
             renderArchive();
@@ -914,12 +838,8 @@
             document.getElementById('plusBtn').addEventListener('click', openModal);
             document.getElementById('modalAdd').addEventListener('click', addTaskFromModal);
             document.getElementById('modalCancel').addEventListener('click', closeModal);
-            document.getElementById('modalOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('modalOverlay')) closeModal();
-            });
-            document.getElementById('modalTaskInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addTaskFromModal();
-            });
+            document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
+            document.getElementById('modalTaskInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') addTaskFromModal(); });
 
             document.getElementById('archiveToggle').addEventListener('click', () => {
                 archiveVisible = !archiveVisible;
@@ -928,8 +848,13 @@
             });
 
             document.getElementById('clearArchiveBtn').addEventListener('click', clearArchive);
-            document.getElementById('prevBtn').addEventListener('click', prev);
-            document.getElementById('nextBtn').addEventListener('click', next);
+
+            // nav buttons (works for both modes)
+            document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
+            document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
+
+            // toggle view by clicking 📅
+            document.getElementById('toggleViewIcon').addEventListener('click', toggleViewMode);
         });
     })();
 </script>
