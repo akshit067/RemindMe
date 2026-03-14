@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · month + multi</title>
+    <title>to‑do · fast mobile</title>
     <style>
         * {
             margin: 0;
@@ -181,16 +181,6 @@
             white-space: nowrap;
         }
 
-        .reminder-badge {
-            font-size: 0.7rem;
-            background: #fff0d9;
-            padding: 0.25rem 0.6rem;
-            border-radius: 30px;
-            margin-left: 0.3rem;
-            color: #b45f1b;
-            font-weight: 500;
-        }
-
         .task-delete {
             background: transparent;
             border: none;
@@ -265,7 +255,6 @@
             color: #4f6f91;
         }
 
-        /* month-only calendar (no week toggle) */
         .calendar-card {
             background: white;
             border-radius: 32px;
@@ -397,11 +386,6 @@
             color: #ffddb0;
         }
 
-        .selected .task-dots {
-            color: #a6561c;
-        }
-
-        /* modal with time picker */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -440,31 +424,7 @@
             border-radius: 60px;
             font-size: 1rem;
             width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .time-picker-row {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
             margin-bottom: 1.5rem;
-            background: #f2f8ff;
-            padding: 0.8rem 1.2rem;
-            border-radius: 60px;
-        }
-
-        .time-picker-row label {
-            font-weight: 600;
-            color: #1e3f60;
-        }
-
-        .time-picker-row input {
-            flex: 1;
-            padding: 0.7rem;
-            border: 1px solid #bed3ea;
-            border-radius: 40px;
-            font-size: 1rem;
-            background: white;
         }
 
         .modal-actions {
@@ -534,7 +494,7 @@
     </div>
     <div id="archiveListContainer" class="archive-list"></div>
 
-    <!-- month-only calendar (week toggle removed) -->
+    <!-- month-only calendar -->
     <div class="calendar-card">
         <div class="selected-date-row">
             <span>📅</span>
@@ -555,15 +515,11 @@
 
     <button class="footer-btn" id="clearArchiveBtn">🗑️ CLEAR ARCHIVE</button>
 
-    <!-- modal with time picker -->
+    <!-- modal (time removed) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate"></div>
             <input type="text" class="modal-input" id="modalTaskInput" placeholder="e.g., buy milk" autofocus>
-            <div class="time-picker-row">
-                <label>⏰</label>
-                <input type="time" id="modalTimeInput" value="09:00">
-            </div>
             <div class="modal-actions">
                 <button class="modal-btn cancel" id="modalCancel">Cancel</button>
                 <button class="modal-btn" id="modalAdd">ADD</button>
@@ -574,11 +530,11 @@
 
 <script>
     (function() {
-        // --- data: active & completed (with time) ---
+        // --- data: active & completed (time removed) ---
         let activeTasks = [];
         let completedTasks = [];
 
-        const STORAGE_KEY = 'todo_month_multifeed';
+        const STORAGE_KEY = 'todo_fast_mobile';
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             try {
@@ -596,14 +552,14 @@
             const m = String(today.getMonth()+1).padStart(2,'0');
             const d = String(today.getDate()).padStart(2,'0');
             activeTasks = [
-                { id: 'a1', text: 'cbse syllabus', date: `${y}-${m}-05`, time: '10:00' },
-                { id: 'a2', text: 'yoga / stretch', date: `${y}-${m}-${d}`, time: '07:30' },
-                { id: 'a3', text: 'team meeting', date: `${y}-${m}-12`, time: '14:00' },
-                { id: 'a4', text: 'call electrician', date: `${y}-${m}-15`, time: '16:30' },
+                { id: 'a1', text: 'cbse syllabus', date: `${y}-${m}-05` },
+                { id: 'a2', text: 'yoga / stretch', date: `${y}-${m}-${d}` },
+                { id: 'a3', text: 'team meeting', date: `${y}-${m}-12` },
+                { id: 'a4', text: 'call electrician', date: `${y}-${m}-15` },
             ];
             completedTasks = [
-                { id: 'c1', text: 'read 30 pages', date: `${y}-${m}-${d}`, time: '21:00' },
-                { id: 'c2', text: 'buy groceries', date: `${y}-${m}-07`, time: '18:00' },
+                { id: 'c1', text: 'read 30 pages', date: `${y}-${m}-${d}` },
+                { id: 'c2', text: 'buy groceries', date: `${y}-${m}-07` },
             ];
         }
 
@@ -619,62 +575,6 @@
         let archiveVisible = false;
         let longPressTimer = null;
         const LONG_PRESS_DELAY = 400; // ms
-
-        // ---------- feedback (vibrate + beep) ----------
-        function playFeedback(type = 'reminder') {
-            if (navigator.vibrate) {
-                if (type === 'reminder') navigator.vibrate([200, 100, 200]);
-                else if (type === 'complete') navigator.vibrate(80);
-                else if (type === 'longpress') navigator.vibrate(30);
-            }
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const resumeAndPlay = () => {
-                    if (type === 'reminder') {
-                        const osc1 = audioCtx.createOscillator();
-                        const gain1 = audioCtx.createGain();
-                        osc1.connect(gain1); gain1.connect(audioCtx.destination);
-                        osc1.frequency.value = 880; gain1.gain.value = 0.3;
-                        osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
-                        setTimeout(() => {
-                            const osc2 = audioCtx.createOscillator();
-                            const gain2 = audioCtx.createGain();
-                            osc2.connect(gain2); gain2.connect(audioCtx.destination);
-                            osc2.frequency.value = 880; gain2.gain.value = 0.3;
-                            osc2.start(); osc2.stop(audioCtx.currentTime + 0.15);
-                        }, 250);
-                    } else if (type === 'complete') {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.connect(gain); gain.connect(audioCtx.destination);
-                        osc.frequency.value = 800; gain.gain.value = 0.25;
-                        osc.start(); osc.stop(audioCtx.currentTime + 0.12);
-                    } else if (type === 'longpress') {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.connect(gain); gain.connect(audioCtx.destination);
-                        osc.frequency.value = 600; gain.gain.value = 0.15;
-                        osc.start(); osc.stop(audioCtx.currentTime + 0.06);
-                    }
-                };
-                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
-                else resumeAndPlay();
-            } catch (e) {}
-        }
-
-        // ---------- reminder check (every 30s) ----------
-        function checkReminders() {
-            const now = new Date();
-            const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-            let triggered = false;
-            activeTasks.forEach(task => {
-                if (task.date === todayStr && task.time === currentTime) triggered = true;
-            });
-            if (triggered) playFeedback('reminder');
-        }
-        setInterval(checkReminders, 30000);
-        setTimeout(checkReminders, 2000);
 
         // helpers
         function save() {
@@ -747,14 +647,14 @@
                     }
                 });
 
-                // long press for multi-select
+                // long press for multi-select (no vibration)
                 cell.addEventListener('touchstart', (e) => {
                     e.preventDefault();
                     const date = cell.dataset.date;
                     longPressTimer = setTimeout(() => {
                         if (multiSelectedDates.has(date)) multiSelectedDates.delete(date);
                         else multiSelectedDates.add(date);
-                        playFeedback('longpress');
+                        // visual only – no vibration
                         renderCalendar();
                         renderActiveList();
                         longPressTimer = null;
@@ -770,7 +670,6 @@
                     longPressTimer = setTimeout(() => {
                         if (multiSelectedDates.has(date)) multiSelectedDates.delete(date);
                         else multiSelectedDates.add(date);
-                        playFeedback('longpress');
                         renderCalendar();
                         renderActiveList();
                         longPressTimer = null;
@@ -793,11 +692,10 @@
             } else {
                 let html = '';
                 filtered.forEach(t => {
-                    const timeDisplay = t.time ? ` ⏰ ${t.time}` : '';
                     html += `
                         <div class="task-item" data-id="${t.id}">
                             <div class="task-check" data-id="${t.id}" data-action="toggle"></div>
-                            <div class="task-content">${escapeHtml(t.text)}${timeDisplay}<span class="date-badge">${t.date}</span></div>
+                            <div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div>
                             <button class="task-delete" data-id="${t.id}" data-action="delete"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
@@ -816,10 +714,9 @@
             } else {
                 let html = '';
                 completedTasks.slice().reverse().forEach(t => {
-                    const timeDisplay = t.time ? ` ⏰ ${t.time}` : '';
                     html += `
                         <div class="archive-item">
-                            <div class="task-content">${escapeHtml(t.text)}${timeDisplay}<span class="date-badge">${t.date}</span></div>
+                            <div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div>
                         </div>
                     `;
                 });
@@ -852,7 +749,7 @@
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
                 save();
-                playFeedback('complete');
+                // no vibration/beep
                 renderCalendar();
                 renderActiveList();
                 renderArchive();
@@ -877,11 +774,10 @@
             document.getElementById('monthCount').innerText = monthDone;
         }
 
-        // modal
+        // modal (time removed)
         function openModal() {
             document.getElementById('modalDate').innerText = `📅 ${mainSelectedDate}`;
             document.getElementById('modalTaskInput').value = '';
-            document.getElementById('modalTimeInput').value = '09:00';
             document.getElementById('modalOverlay').style.display = 'flex';
             setTimeout(() => document.getElementById('modalTaskInput').focus(), 100);
         }
@@ -892,7 +788,6 @@
             const inp = document.getElementById('modalTaskInput');
             const text = inp.value.trim();
             if (!text) { alert('enter task'); return; }
-            const time = document.getElementById('modalTimeInput').value;
 
             const targetDates = multiSelectedDates.size > 0 ? Array.from(multiSelectedDates) : [mainSelectedDate];
             
@@ -901,7 +796,6 @@
                     id: Date.now() + '-' + Math.random().toString(36).substr(2, 6) + '-' + date,
                     text: text,
                     date: date,
-                    time: time || null,
                 });
             });
 
@@ -912,7 +806,7 @@
             renderActiveList();
         }
 
-        // navigation (month only)
+        // navigation
         function prev() {
             if (currentMonth === 0) { currentMonth = 11; currentYear--; }
             else currentMonth--;
