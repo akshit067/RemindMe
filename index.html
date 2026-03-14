@@ -1,10 +1,9 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · complete feedback</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>TO-DO · fast & complete</title>
     <style>
         * {
             margin: 0;
@@ -15,60 +14,55 @@
         }
 
         body {
-            background: #f5f7fb;
+            background: #eef2f7;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 0 0 20px 0;
+            padding: 16px 12px;
         }
 
         .app {
-            max-width: 480px;
+            max-width: 650px;
             width: 100%;
             background: white;
-            border-radius: 32px 32px 28px 28px;
-            box-shadow: 0 15px 30px rgba(0, 15, 30, 0.1);
-            margin: 12px 12px 20px 12px;
-            padding: 1.5rem 1rem 1.8rem 1rem;
+            border-radius: 36px 36px 28px 28px;
+            box-shadow: 0 20px 40px rgba(0, 10, 30, 0.12);
+            padding: 1.5rem 1.2rem 2rem;
+            margin: auto;
         }
 
-        /* header */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.5rem;
-            padding: 0 0.2rem;
+            flex-wrap: wrap;
         }
 
         .title-area h1 {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            letter-spacing: 1px;
-            background: linear-gradient(145deg, #1f3449, #2b4f74);
+            letter-spacing: 1.5px;
+            background: linear-gradient(145deg, #142c44, #2b4b6e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .plus-btn {
-            width: 60px;
-            height: 60px;
-            background: #1f3449;
+            width: 54px;
+            height: 54px;
+            background: #1d364b;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 10px 18px rgba(25, 55, 80, 0.25);
-            border: none;
+            box-shadow: 0 8px 16px rgba(0,20,40,0.2);
+            border: 2px solid white;
             transition: 0.1s;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
         }
 
         .plus-btn:active {
@@ -76,85 +70,84 @@
             transform: scale(0.96);
         }
 
-        /* stats cards */
         .stats-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 1.8rem;
-        }
-
-        .stat-card {
-            flex: 1 1 100px;
+            justify-content: space-between;
             background: #ecf3fa;
-            border-radius: 30px;
-            padding: 0.8rem 0.2rem;
-            text-align: center;
-            font-weight: 600;
+            border-radius: 40px;
+            padding: 0.6rem 1.2rem;
+            margin-bottom: 1.8rem;
+            font-weight: 500;
             font-size: 0.9rem;
-            color: #1e3b5a;
+            color: #0f2a40;
             border: 1px solid #bed3ea;
+        }
+
+        /* task list on top */
+        .task-list-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 0 0.8rem 0;
+            color: #1d3b5a;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            gap: 0.6rem;
+            background: #e9f2fc;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid #c5d8ef;
         }
 
-        .stat-card span:first-child {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1d3f62;
+        .task-list-title i {
+            color: #e67e22;
         }
 
-        /* active task list */
-        .section-title {
-            font-weight: 700;
+        .task-list-title span {
+            background: white;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
             font-size: 1.2rem;
-            margin: 0 0 0.6rem 0.5rem;
-            color: #1e3b5a;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
+            color: #1d3f62;
         }
 
         .task-list {
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
-            margin-bottom: 1.8rem;
-            max-height: 300px;
+            margin-bottom: 1.5rem;
+            max-height: 260px;
             overflow-y: auto;
             padding-right: 4px;
         }
 
         .task-item {
             background: white;
-            border: 1px solid #dee9f2;
-            border-radius: 60px;
-            padding: 0.4rem 0.4rem 0.4rem 1.2rem;
+            border: 1px solid #dae5f2;
+            border-radius: 80px;
+            padding: 0.3rem 0.3rem 0.3rem 1.2rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            gap: 0.4rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
         .task-check {
-            width: 38px;
-            height: 38px;
-            border-radius: 30px;
-            border: 2.5px solid #b6cde5;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            border: 2px solid #b0c9e5;
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             flex-shrink: 0;
-            touch-action: manipulation;
         }
 
         .task-check.completed {
             background: #1f8b4c;
-            border-color: #0f682f;
+            border-color: #116a36;
             color: white;
         }
 
@@ -162,27 +155,27 @@
             flex: 1;
             font-size: 1rem;
             font-weight: 500;
-            color: #1a3146;
+            color: #172b3a;
             word-break: break-word;
-            padding: 0.4rem 0;
+            padding: 0.5rem 0;
         }
 
         .date-badge {
             font-size: 0.7rem;
-            background: #eaf1fa;
-            padding: 0.25rem 0.8rem;
-            border-radius: 30px;
-            margin-left: 0.5rem;
+            background: #e7f0fa;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            margin-left: 0.6rem;
             font-weight: 400;
-            color: #2b4f74;
+            color: #284e72;
             white-space: nowrap;
         }
 
         .reminder-badge {
             font-size: 0.7rem;
             background: #fff0d9;
-            padding: 0.25rem 0.6rem;
-            border-radius: 30px;
+            padding: 0.2rem 0.6rem;
+            border-radius: 40px;
             margin-left: 0.3rem;
             color: #b45f1b;
             font-weight: 500;
@@ -191,36 +184,33 @@
         .task-delete {
             background: transparent;
             border: none;
-            color: #9bb3cf;
-            font-size: 1.4rem;
-            padding: 0.6rem 1rem 0.6rem 0.2rem;
+            color: #97b1cf;
+            font-size: 1.3rem;
+            padding: 0.5rem 1rem 0.5rem 0.2rem;
             cursor: pointer;
-            touch-action: manipulation;
         }
 
         .empty-message {
             text-align: center;
-            color: #8ba3c2;
-            padding: 1.8rem 1rem;
-            background: #f6faff;
-            border-radius: 50px;
-            font-size: 0.95rem;
+            color: #7c98b5;
+            padding: 1.8rem;
+            background: #f5faff;
+            border-radius: 60px;
         }
 
-        /* archive */
+        /* archive toggle */
         .archive-header {
             display: flex;
             align-items: center;
             gap: 0.6rem;
             background: #e3ecf5;
-            padding: 1rem 1.2rem;
+            padding: 0.8rem 1.2rem;
             border-radius: 40px;
             margin: 1rem 0 0.6rem;
             border: 1px solid #c5d8f0;
             cursor: pointer;
             font-weight: 600;
             color: #1f3f60;
-            touch-action: manipulation;
         }
 
         .archive-header i {
@@ -260,59 +250,62 @@
             color: #4f6f91;
         }
 
-        /* calendar card */
-        .calendar-card {
+        /* calendar container (month only) */
+        .calendar-container {
             background: white;
-            border-radius: 32px;
-            padding: 1.2rem 0.8rem 1rem;
-            border: 1px solid #dae6f2;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-            margin: 0.5rem 0 0.8rem;
+            border-radius: 28px;
+            padding: 1.2rem 1rem 1rem 1rem;
+            margin: 0.5rem 0 0.5rem;
+            border: 1px solid #d4e2f2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
 
-        .selected-date-row {
+        .select-date-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 16px;
             background: #f2f8ff;
-            padding: 0.8rem 1.2rem;
+            padding: 10px 16px;
             border-radius: 50px;
-            margin-bottom: 1rem;
+        }
+
+        .select-date-row span:first-child {
             font-weight: 600;
-            color: #1e3f60;
+            color: #2b4b6e;
         }
 
-        .selected-date-row span:last-child {
-            background: white;
-            padding: 0.3rem 1.2rem;
-            border-radius: 30px;
-            font-size: 1rem;
+        .date-picker-input {
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1d3b5a;
+            width: 140px;
         }
 
-        .cal-header {
+        .calendar-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.8rem;
-            padding: 0 0.2rem;
+            margin-bottom: 12px;
         }
 
-        .cal-month {
+        .month-year {
             font-weight: 700;
             font-size: 1.3rem;
             color: #1d3f62;
         }
 
-        .cal-nav button {
+        .nav-buttons button {
             background: transparent;
-            border: 1px solid #c9d9ee;
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
+            border: 1px solid #c4d6ec;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
             font-size: 1.2rem;
             cursor: pointer;
             color: #1e3f60;
-            margin-left: 0.3rem;
-            touch-action: manipulation;
+            margin-left: 4px;
         }
 
         .weekdays {
@@ -321,14 +314,14 @@
             text-align: center;
             font-weight: 600;
             color: #38658f;
-            margin-bottom: 0.3rem;
+            margin-bottom: 6px;
             font-size: 0.8rem;
         }
 
         .month-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
+            gap: 4px;
         }
 
         .cal-cell {
@@ -345,11 +338,13 @@
             border: 1px solid transparent;
             cursor: pointer;
             padding: 4px 0;
-            transition: background-color 0.1s;
-            touch-action: manipulation;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
+            transition: background-color 0.05s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cal-cell:active {
+            background: #d9e6f5;
+            transform: scale(0.98);
         }
 
         .cal-cell.has-tasks {
@@ -387,7 +382,64 @@
             color: #ffddb0;
         }
 
-        /* modal */
+        /* quick add bar (replaces modal for simplicity, but we keep modal from previous) */
+        .quick-add-bar {
+            background: #f4faff;
+            border-radius: 50px;
+            padding: 0.7rem 1.2rem;
+            margin: 1rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            border: 1px solid #cddef2;
+        }
+
+        .quick-add-bar input {
+            flex: 2 1 180px;
+            padding: 0.7rem 1rem;
+            border: 1px solid #bfd3e9;
+            border-radius: 40px;
+            font-size: 0.95rem;
+        }
+
+        .quick-add-bar button {
+            background: #1d364b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .selected-date-indicator {
+            font-weight: 600;
+            color: #1d4e7c;
+            background: #d9e9ff;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.2rem;
+        }
+
+        .clear-btn {
+            background: none;
+            border: 1px solid #cfdeef;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            color: #1d4569;
+            cursor: pointer;
+        }
+
+        /* modal for time input */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -450,7 +502,6 @@
             border: 1px solid #bed3ea;
             border-radius: 40px;
             font-size: 1rem;
-            background: white;
         }
 
         .modal-actions {
@@ -469,73 +520,70 @@
             font-size: 1rem;
             cursor: pointer;
             flex: 1;
-            touch-action: manipulation;
         }
 
         .modal-btn.cancel {
             background: #e2eaf3;
             color: #1d3f62;
         }
-
-        .footer-btn {
-            background: transparent;
-            border: 1.5px solid #c4d6ec;
-            padding: 0.9rem 1.8rem;
-            border-radius: 60px;
-            color: #1d4569;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 1rem;
-            width: 100%;
-            touch-action: manipulation;
-        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="app">
+    <!-- header with + button (replaces profile) -->
     <div class="header">
         <div class="title-area"><h1>TO-DO</h1></div>
         <div class="plus-btn" id="plusBtn">+</div>
     </div>
 
+    <!-- stats -->
     <div class="stats-row">
-        <div class="stat-card"><span id="activeCount">0</span> active</div>
-        <div class="stat-card"><span id="completedCount">0</span> done</div>
-        <div class="stat-card"><span id="monthCount">0</span> this month</div>
+        <span>📋 active: <span id="activeCount">0</span></span>
+        <span>✅ done: <span id="completedCount">0</span></span>
+        <span>📅 month done: <span id="monthlyDone">0</span></span>
     </div>
 
-    <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading"></span></div>
-    <div id="activeTaskList" class="task-list"></div>
+    <!-- TASK LIST (TOP) -->
+    <div class="task-list-title">
+        <i class="fas fa-tasks"></i> TASKS FOR <span id="selectedDateHeading">2026-03-14</span>
+    </div>
+    <div id="taskListContainer" class="task-list"></div>
 
+    <!-- archive toggle -->
     <div class="archive-header" id="archiveToggle">
         <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
     </div>
     <div id="archiveListContainer" class="archive-list"></div>
 
-    <div class="calendar-card">
-        <div class="selected-date-row">
-            <span>📅</span>
-            <span id="selectedDateDisplay"></span>
+    <!-- calendar (month only) -->
+    <div class="calendar-container">
+        <div class="select-date-row">
+            <span>Select Date</span>
+            <span class="date-picker-input" id="selectedDateDisplay">14 Mar 2026</span>
         </div>
-        <div class="cal-header">
-            <span class="cal-month" id="monthYearDisplay"></span>
-            <div class="cal-nav">
+        <div class="calendar-header">
+            <span class="month-year" id="monthYearDisplay">March 2026</span>
+            <div class="nav-buttons">
                 <button id="prevBtn">←</button>
                 <button id="nextBtn">→</button>
             </div>
         </div>
-        <div class="weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
-        <div id="calendarGrid" class="month-grid"></div>
+        <div class="weekdays">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div id="calendarGridContainer" class="month-grid"></div>
     </div>
 
-    <button class="footer-btn" id="clearArchiveBtn">🗑️ CLEAR ARCHIVE</button>
+    <!-- footer clear completed (archive) -->
+    <div class="footer">
+        <button class="clear-btn" id="clearArchiveBtn">🗑️ CLEAR ARCHIVE</button>
+    </div>
 
-    <!-- modal -->
+    <!-- modal for quick add (with time) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
-            <div class="modal-date" id="modalDate"></div>
+            <div class="modal-date" id="modalDate">📅 2026-03-14</div>
             <input type="text" class="modal-input" id="modalTaskInput" placeholder="task description" autofocus>
             <div class="time-picker-row">
                 <label>⏰</label>
@@ -551,11 +599,11 @@
 
 <script>
     (function() {
-        // --- data ---
+        // ---------- data: active & completed ----------
         let activeTasks = [];
         let completedTasks = [];
 
-        const STORAGE_KEY = 'todo_complete_feedback';
+        const STORAGE_KEY = 'todo_fast_multiselect';
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             try {
@@ -588,138 +636,98 @@
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
         const today = new Date();
+        // auto-select current date
         let mainSelectedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
         
-        let multiSelectedDates = new Set();
+        let multiSelectedDates = new Set(); // stores dates for multi-select
         let archiveVisible = false;
-        
-        // long press timers
         let longPressTimer = null;
-        const LONG_PRESS_DELAY = 400;
+        const LONG_PRESS_DELAY = 400; // ms
 
-        // ---------- unified feedback function (vibrate + beep) ----------
+        // ---------- feedback (vibrate + beep) ----------
         function playFeedback(type = 'reminder') {
-            // vibration pattern based on type
             if (navigator.vibrate) {
-                if (type === 'reminder') {
-                    navigator.vibrate([200, 100, 200]); // double pulse for reminder
-                } else if (type === 'complete') {
-                    navigator.vibrate(80); // short single pulse for completion
-                } else if (type === 'longpress') {
-                    navigator.vibrate(30); // very short for long press
-                }
+                if (type === 'reminder') navigator.vibrate([200, 100, 200]);
+                else if (type === 'complete') navigator.vibrate(80);
+                else if (type === 'longpress') navigator.vibrate(30);
             }
-            
-            // beep using Web Audio (works on mobile)
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // resume if suspended (mobile browsers)
                 const resumeAndPlay = () => {
                     if (type === 'reminder') {
-                        // two quick beeps for reminder
                         const osc1 = audioCtx.createOscillator();
                         const gain1 = audioCtx.createGain();
-                        osc1.connect(gain1);
-                        gain1.connect(audioCtx.destination);
-                        osc1.frequency.value = 880;
-                        gain1.gain.value = 0.3;
-                        osc1.start();
-                        osc1.stop(audioCtx.currentTime + 0.15);
-                        
+                        osc1.connect(gain1); gain1.connect(audioCtx.destination);
+                        osc1.frequency.value = 880; gain1.gain.value = 0.3;
+                        osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
                         setTimeout(() => {
                             const osc2 = audioCtx.createOscillator();
                             const gain2 = audioCtx.createGain();
-                            osc2.connect(gain2);
-                            gain2.connect(audioCtx.destination);
-                            osc2.frequency.value = 880;
-                            gain2.gain.value = 0.3;
-                            osc2.start();
-                            osc2.stop(audioCtx.currentTime + 0.15);
+                            osc2.connect(gain2); gain2.connect(audioCtx.destination);
+                            osc2.frequency.value = 880; gain2.gain.value = 0.3;
+                            osc2.start(); osc2.stop(audioCtx.currentTime + 0.15);
                         }, 250);
                     } else if (type === 'complete') {
                         const osc = audioCtx.createOscillator();
                         const gain = audioCtx.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.frequency.value = 800;
-                        gain.gain.value = 0.25;
-                        osc.start();
-                        osc.stop(audioCtx.currentTime + 0.12);
+                        osc.connect(gain); gain.connect(audioCtx.destination);
+                        osc.frequency.value = 800; gain.gain.value = 0.25;
+                        osc.start(); osc.stop(audioCtx.currentTime + 0.12);
                     } else if (type === 'longpress') {
                         const osc = audioCtx.createOscillator();
                         const gain = audioCtx.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.frequency.value = 600;
-                        gain.gain.value = 0.15;
-                        osc.start();
-                        osc.stop(audioCtx.currentTime + 0.06);
+                        osc.connect(gain); gain.connect(audioCtx.destination);
+                        osc.frequency.value = 600; gain.gain.value = 0.15;
+                        osc.start(); osc.stop(audioCtx.currentTime + 0.06);
                     }
                 };
-                
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(resumeAndPlay);
-                } else {
-                    resumeAndPlay();
-                }
-            } catch (e) {
-                console.log('Audio not supported');
-            }
+                if (audioCtx.state === 'suspended') audioCtx.resume().then(resumeAndPlay);
+                else resumeAndPlay();
+            } catch (e) {}
         }
 
-        // ---------- reminder system ----------
+        // ---------- reminder check ----------
         function checkReminders() {
             const now = new Date();
             const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-            
             let triggered = false;
             activeTasks.forEach(task => {
-                if (task.date === todayStr && task.time === currentTime) {
-                    triggered = true;
-                }
+                if (task.date === todayStr && task.time === currentTime) triggered = true;
             });
-            
-            if (triggered) {
-                playFeedback('reminder');
-            }
+            if (triggered) playFeedback('reminder');
         }
-
-        // start reminder interval (every 30 seconds)
         setInterval(checkReminders, 30000);
         setTimeout(checkReminders, 2000);
 
-        // ---------- save ----------
+        // ---------- helpers ----------
         function save() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks }));
         }
-
         function formatDisplay(iso) {
             const [y,m,d] = iso.split('-');
             const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
         }
-
         function activeCountForDate(dateStr) {
             return activeTasks.filter(t => t.date === dateStr).length;
         }
 
-        // --- render calendar ---
+        // ---------- render calendar (fast & responsive) ----------
         function renderCalendar() {
             const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
             document.getElementById('monthYearDisplay').innerText = `${monthNames[currentMonth]} ${currentYear}`;
             document.getElementById('selectedDateDisplay').innerText = formatDisplay(mainSelectedDate);
             document.getElementById('selectedDateHeading').innerText = mainSelectedDate;
 
-            const grid = document.getElementById('calendarGrid');
-            renderMonth(grid);
+            const container = document.getElementById('calendarGridContainer');
+            renderMonth(container);
             attachCellEvents();
         }
 
         function renderMonth(container) {
             container.className = 'month-grid';
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay(); // 0 sun
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const todayDate = new Date();
             const isCurrentMonth = (todayDate.getFullYear() === currentYear && todayDate.getMonth() === currentMonth);
@@ -750,86 +758,55 @@
         }
 
         function attachCellEvents() {
-            // clean clone approach to avoid double listeners
             document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
-                cell.replaceWith(cell.cloneNode(true));
-            });
-            
-            document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
-                // tap/click
+                // --- fast click: set main selected (instant) ---
                 cell.addEventListener('click', (e) => {
                     const date = cell.dataset.date;
                     if (date) {
                         mainSelectedDate = date;
-                        renderCalendar();
+                        renderCalendar();      // immediate visual update
                         renderActiveList();
                     }
                 });
 
-                // long press
+                // --- long press for multi-select ---
                 cell.addEventListener('touchstart', (e) => {
                     e.preventDefault();
                     const date = cell.dataset.date;
                     longPressTimer = setTimeout(() => {
                         // toggle multi-select
-                        if (multiSelectedDates.has(date)) {
-                            multiSelectedDates.delete(date);
-                        } else {
-                            multiSelectedDates.add(date);
-                        }
-                        playFeedback('longpress'); // short feedback
-                        renderCalendar();
-                        renderActiveList();
-                        longPressTimer = null;
-                    }, LONG_PRESS_DELAY);
-                });
-
-                cell.addEventListener('touchend', () => {
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-                cell.addEventListener('touchcancel', () => {
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-                cell.addEventListener('touchmove', () => {
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                });
-
-                // mouse fallback
-                cell.addEventListener('mousedown', (e) => {
-                    const date = cell.dataset.date;
-                    longPressTimer = setTimeout(() => {
-                        if (multiSelectedDates.has(date)) {
-                            multiSelectedDates.delete(date);
-                        } else {
-                            multiSelectedDates.add(date);
-                        }
+                        if (multiSelectedDates.has(date)) multiSelectedDates.delete(date);
+                        else multiSelectedDates.add(date);
                         playFeedback('longpress');
                         renderCalendar();
                         renderActiveList();
                         longPressTimer = null;
                     }, LONG_PRESS_DELAY);
                 });
-                cell.addEventListener('mouseup', () => {
-                    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+                cell.addEventListener('touchend', () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } });
+                cell.addEventListener('touchcancel', () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } });
+                cell.addEventListener('touchmove', () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } });
+
+                // mouse fallback
+                cell.addEventListener('mousedown', (e) => {
+                    const date = cell.dataset.date;
+                    longPressTimer = setTimeout(() => {
+                        if (multiSelectedDates.has(date)) multiSelectedDates.delete(date);
+                        else multiSelectedDates.add(date);
+                        playFeedback('longpress');
+                        renderCalendar();
+                        renderActiveList();
+                        longPressTimer = null;
+                    }, LONG_PRESS_DELAY);
                 });
-                cell.addEventListener('mouseleave', () => {
-                    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-                });
+                cell.addEventListener('mouseup', () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } });
+                cell.addEventListener('mouseleave', () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } });
             });
         }
 
-        // render active tasks
+        // render active tasks (shows multi-selected dates or main)
         function renderActiveList() {
-            const container = document.getElementById('activeTaskList');
+            const container = document.getElementById('taskListContainer');
             const datesToShow = multiSelectedDates.size > 0 ? Array.from(multiSelectedDates) : [mainSelectedDate];
             
             const filtered = activeTasks.filter(t => datesToShow.includes(t.date));
@@ -894,10 +871,7 @@
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
                 save();
-                
-                // --- COMPLETION FEEDBACK (restored) ---
                 playFeedback('complete');
-                
                 renderCalendar();
                 renderActiveList();
                 renderArchive();
@@ -919,10 +893,10 @@
             document.getElementById('completedCount').innerText = completedTasks.length;
             const monthStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
             const monthDone = completedTasks.filter(t => t.date.startsWith(monthStr)).length;
-            document.getElementById('monthCount').innerText = monthDone;
+            document.getElementById('monthlyDone').innerText = monthDone;
         }
 
-        // modal
+        // modal functions
         function openModal() {
             document.getElementById('modalDate').innerText = `📅 ${mainSelectedDate}`;
             document.getElementById('modalTaskInput').value = '';
@@ -957,6 +931,7 @@
             renderActiveList();
         }
 
+        // navigation
         function prev() {
             if (currentMonth === 0) { currentMonth = 11; currentYear--; }
             else currentMonth--;
