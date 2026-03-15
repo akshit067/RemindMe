@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>to‑do · alarm · no scroll</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>to‑do · priority · repeat · remind</title>
     <style>
         * {
             margin: 0;
@@ -17,111 +17,106 @@
             background: #f5f7fb;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
-            height: 100vh;
-            overflow: hidden;
-            padding: 0;
+            padding: 0 0 20px 0;
         }
 
         .app {
             max-width: 480px;
             width: 100%;
-            height: 100vh;
-            max-height: 100vh;
             background: white;
-            border-radius: 32px 32px 0 0;
+            border-radius: 32px 32px 28px 28px;
             box-shadow: 0 15px 30px rgba(0, 15, 30, 0.1);
-            margin: 0;
-            padding: 1rem 1rem 0.8rem 1rem;
+            margin: 12px 12px 20px 12px;
+            padding: 1.5rem 1rem 1.8rem 1rem;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.8rem;
-            flex-shrink: 0;
+            margin-bottom: 1.5rem;
+            padding: 0 0.2rem;
         }
 
         .title-area h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 700;
+            letter-spacing: 1px;
             background: linear-gradient(145deg, #1f3449, #2b4f74);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .plus-btn {
-            width: 52px;
-            height: 52px;
+            width: 60px;
+            height: 60px;
             background: #1f3449;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2.4rem;
+            font-size: 2.6rem;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 8px 14px rgba(25, 55, 80, 0.25);
+            box-shadow: 0 10px 18px rgba(25, 55, 80, 0.25);
             border: none;
-            flex-shrink: 0;
+            transition: 0.1s;
         }
         .plus-btn:active { background: #2b4f74; transform: scale(0.96); }
 
         .section-title {
             font-weight: 700;
-            font-size: 1.1rem;
-            margin: 0 0 0.3rem 0.5rem;
+            font-size: 1.2rem;
+            margin: 0 0 0.6rem 0.5rem;
             color: #1e3b5a;
             display: flex;
             align-items: center;
             gap: 0.4rem;
-            flex-shrink: 0;
         }
 
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
+            gap: 0.6rem;
+            margin-bottom: 1.8rem;
+            max-height: 300px;
             overflow-y: auto;
-            flex: 1 1 auto;
-            min-height: 0;
             padding-right: 4px;
         }
 
         .task-item {
             background: white;
             border: 1px solid #dee9f2;
-            border-radius: 50px;
-            padding: 0.3rem 0.3rem 0.3rem 1rem;
+            border-radius: 60px;
+            padding: 0.4rem 0.4rem 0.4rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .priority-flag {
+            font-size: 1.3rem;
+            width: 32px;
+            text-align: center;
             flex-shrink: 0;
         }
 
-        /* priority flag hidden – no display */
-        .priority-flag {
-            display: none;
-        }
-
         .task-check {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 30px;
             border: 2.5px solid #b6cde5;
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
             flex-shrink: 0;
         }
@@ -129,11 +124,11 @@
 
         .task-content {
             flex: 1;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 500;
             color: #1a3146;
             word-break: break-word;
-            padding: 0.2rem 0;
+            padding: 0.4rem 0;
         }
 
         .task-meta {
@@ -141,13 +136,13 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 2px;
-            margin-right: 2px;
+            margin-right: 4px;
         }
         .reminder-badge {
             background: #fdefcb;
             border-radius: 20px;
             padding: 2px 8px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #b45b0f;
             white-space: nowrap;
         }
@@ -155,23 +150,25 @@
             background: #e0e9f5;
             border-radius: 20px;
             padding: 2px 8px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #1d4e7c;
         }
         .date-badge {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             background: #eaf1fa;
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.8rem;
             border-radius: 30px;
+            font-weight: 400;
             color: #2b4f74;
+            white-space: nowrap;
         }
 
         .task-delete {
             background: transparent;
             border: none;
             color: #9bb3cf;
-            font-size: 1.3rem;
-            padding: 0.5rem 0.5rem 0.5rem 0.2rem;
+            font-size: 1.4rem;
+            padding: 0.6rem 0.8rem 0.6rem 0.2rem;
             cursor: pointer;
         }
         .task-delete:active { color: #c03d2e; }
@@ -179,26 +176,23 @@
         .empty-message {
             text-align: center;
             color: #8ba3c2;
-            padding: 1.2rem 1rem;
+            padding: 1.8rem 1rem;
             background: #f6faff;
-            border-radius: 40px;
-            font-size: 0.9rem;
+            border-radius: 50px;
         }
 
         .archive-header {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             background: #e3ecf5;
-            padding: 0.7rem 1.2rem;
+            padding: 1rem 1.2rem;
             border-radius: 40px;
-            margin: 0.3rem 0 0.3rem;
+            margin: 1rem 0 0.6rem;
             border: 1px solid #c5d8f0;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.95rem;
             color: #1f3f60;
-            flex-shrink: 0;
         }
         .archive-header i { transition: transform 0.2s; }
         .archive-header .rotate { transform: rotate(90deg); }
@@ -206,11 +200,10 @@
         .archive-list {
             display: none;
             flex-direction: column;
-            gap: 0.4rem;
-            margin-bottom: 0.5rem;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            max-height: 200px;
             overflow-y: auto;
-            flex: 0 1 auto;
-            max-height: 100px;
         }
         .archive-list.visible { display: flex; }
 
@@ -218,7 +211,7 @@
             background: #f1f7fd;
             border: 1px dashed #adc5e2;
             border-radius: 40px;
-            padding: 0.5rem 1rem 0.5rem 1.2rem;
+            padding: 0.7rem 1.2rem 0.7rem 1.5rem;
             display: flex;
             align-items: center;
             opacity: 0.85;
@@ -232,77 +225,82 @@
             background: transparent;
             border: none;
             color: #c03d2e;
-            font-size: 1.1rem;
-            padding: 0.2rem 0.2rem 0.2rem 0.8rem;
+            font-size: 1.2rem;
+            padding: 0.4rem 0.4rem 0.4rem 1rem;
             cursor: pointer;
         }
 
         .calendar-card {
             background: white;
-            border-radius: 28px;
-            padding: 0.8rem 0.6rem 0.5rem;
+            border-radius: 32px;
+            padding: 1.2rem 0.8rem 1rem;
             border: 1px solid #dae6f2;
-            margin: 0.3rem 0 0;
+            margin: 0.5rem 0 0.8rem;
             touch-action: pan-y pinch-zoom;
-            flex-shrink: 0;
         }
         .selected-date-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #f2f8ff;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            margin-bottom: 0.6rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
             font-weight: 600;
-            font-size: 0.9rem;
             color: #1e3f60;
             cursor: pointer;
         }
         .selected-date-row span:last-child {
             background: white;
-            padding: 0.2rem 1rem;
+            padding: 0.3rem 1.2rem;
             border-radius: 30px;
         }
-        .cal-header { display: flex; justify-content: center; margin-bottom: 0.3rem; }
-        .cal-month { font-weight: 700; font-size: 1.2rem; color: #1d3f62; }
+        .cal-header { display: flex; justify-content: center; margin-bottom: 0.8rem; }
+        .cal-month { font-weight: 700; font-size: 1.5rem; color: #1d3f62; }
         .weekdays {
             display: grid; grid-template-columns: repeat(7,1fr); text-align: center;
-            font-weight: 600; color: #38658f; font-size: 0.7rem; margin-bottom: 0.2rem;
+            font-weight: 600; color: #38658f; margin-bottom: 0.3rem; font-size: 0.8rem;
         }
-        .month-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+        .month-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
         .cal-cell {
             aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: #f9fcff; border-radius: 24px; font-size: 0.8rem; font-weight: 500; color: #1e3c5c;
-            border: 1px solid transparent; cursor: pointer; padding: 2px 0;
+            background: #f9fcff; border-radius: 30px; font-size: 0.9rem; font-weight: 500; color: #1e3c5c;
+            border: 1px solid transparent; cursor: pointer; padding: 4px 0;
         }
         .cal-cell.has-tasks { background: #e1effb; border-color: #9bbde0; }
-        .cal-cell.today { background: #2b4f74; color: white; }
-        .cal-cell.selected { background: #ffe1b3; border: 2px solid #e67e22; }
-        .task-dots { font-size: 0.5rem; letter-spacing: 1px; margin-top: 1px; }
+        .cal-cell.today { background: #2b4f74; color: white; font-weight: 700; }
+        .cal-cell.selected { background: #ffe1b3; border: 2px solid #e67e22; color: #1d2b3a; font-weight: 700; }
+        .task-dots { font-size: 0.6rem; letter-spacing: 1.5px; color: #2b4f74; margin-top: 2px; }
+        .today .task-dots { color: #ffddb0; }
+        .selected .task-dots { color: #a6561c; }
 
-        /* modal - fits without scroll */
+        /* MODAL with extra fields */
         .modal-overlay {
             display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); align-items: center; justify-content: center;
             z-index: 200; padding: 1rem;
         }
         .modal-card {
-            background: white; width: 100%; max-width: 380px; border-radius: 40px; padding: 1.5rem 1.2rem;
+            background: white; width: 100%; max-width: 400px; border-radius: 48px; padding: 2rem 1.5rem;
+            box-shadow: 0 30px 50px rgba(0,10,30,0.2);
         }
         .modal-date {
-            font-weight: 700; font-size: 1.4rem; color: #1d3f62; background: #e9f2fc;
-            padding: 0.6rem 0.8rem; border-radius: 50px; text-align: center; margin-bottom: 1rem;
+            font-weight: 700; font-size: 1.7rem; color: #1d3f62; background: #e9f2fc;
+            padding: 0.8rem 1rem; border-radius: 60px; text-align: center; margin-bottom: 1.2rem;
         }
         .modal-input, .modal-select {
-            padding: 0.8rem 1rem; border: 2px solid #c9d9ee; border-radius: 50px;
-            font-size: 0.9rem; width: 100%; margin-bottom: 0.8rem;
+            padding: 1rem 1.2rem; border: 2px solid #c9d9ee; border-radius: 60px;
+            font-size: 1rem; width: 100%; margin-bottom: 1rem;
         }
-        .row-duo { display: flex; gap: 8px; margin-bottom: 0.8rem; }
-        .modal-actions { display: flex; gap: 0.6rem; }
+        .row-duo {
+            display: flex; gap: 10px; margin-bottom: 1rem;
+        }
+        .row-duo .modal-input, .row-duo .modal-select { margin-bottom: 0; }
+        .modal-select { background: white; }
+        .modal-actions { display: flex; gap: 0.8rem; justify-content: flex-end; }
         .modal-btn {
-            background: #1f3449; color: white; border: none; padding: 0.8rem 1.2rem;
-            border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; flex: 1;
+            background: #1f3449; color: white; border: none; padding: 1rem 2rem;
+            border-radius: 60px; font-weight: 600; font-size: 1rem; cursor: pointer; flex: 1;
         }
         .modal-btn.cancel { background: #e2eaf3; color: #1d3f62; }
     </style>
@@ -332,11 +330,12 @@
         <div id="calendarGrid" class="month-grid"></div>
     </div>
 
-    <!-- modal -->
+    <!-- modal with priority, repeat, reminder -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate">📅 2026-03-15</div>
             <input type="text" class="modal-input" id="modalTaskInput" placeholder="e.g., buy milk" autofocus>
+
             <div class="row-duo">
                 <select class="modal-select" id="modalPriority">
                     <option value="🔴">🔴 High</option>
@@ -351,7 +350,12 @@
                     <option value="monthly">monthly</option>
                 </select>
             </div>
-            <input type="time" class="modal-input" id="modalReminderTime" placeholder="Reminder time">
+
+            <div class="row-duo">
+                <input type="time" class="modal-input" id="modalReminderTime" placeholder="Reminder time">
+                <select class="modal-select" id="modalReminderUnit" style="display: none;"><!-- dummy --></select>
+            </div>
+
             <div class="modal-actions">
                 <button class="modal-btn cancel" id="modalCancel">Cancel</button>
                 <button class="modal-btn" id="modalAdd">ADD</button>
@@ -364,11 +368,15 @@
     (function() {
         let activeTasks = [];
         let completedTasks = [];
-        const STORAGE_KEY = 'todo_alarm_scrollfix';
+
+        const STORAGE_KEY = 'todo_adv_plus';
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-            try { const data = JSON.parse(stored); activeTasks = data.active || []; completedTasks = data.completed || []; }
-            catch (e) { resetSample(); }
+            try {
+                const data = JSON.parse(stored);
+                activeTasks = data.active || [];
+                completedTasks = data.completed || [];
+            } catch (e) { resetSample(); }
         } else { resetSample(); }
 
         function resetSample() {
@@ -383,8 +391,8 @@
                 { id: 'a4', text: 'call electrician', date: `${y}-${m}-15`, priority: '🟡', repeat: 'none', reminder: null },
             ];
             completedTasks = [
-                { id: 'c1', text: 'read 30 pages', date: `${y}-${m}-${d}`, priority: '🟢', repeat: 'none' },
-                { id: 'c2', text: 'buy groceries', date: `${y}-${m}-07`, priority: '🟡', repeat: 'weekly' },
+                { id: 'c1', text: 'read 30 pages', date: `${y}-${m}-${d}`, priority: '🟢', repeat: 'none', reminder: null },
+                { id: 'c2', text: 'buy groceries', date: `${y}-${m}-07`, priority: '🟡', repeat: 'weekly', reminder: null },
             ];
         }
 
@@ -396,61 +404,13 @@
         })();
         let archiveVisible = false;
 
-        // ---------- PERSISTENT ALARM for 🔴 tasks (long beep) ----------
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let activeAlarms = new Map(); // store timeoutId per task id
-
-        function playLongBeep() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = 880; // higher pitch for alarm
-            gain.gain.value = 0.3;
-            osc.connect(gain).connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 4.0); // 4 second long beep
-        }
-
-        function scheduleAlarm(task) {
-            if (!task.reminder || task.priority !== '🔴') return; // only 🔴 tasks get persistent alarm
-            const [hour, minute] = task.reminder.split(':').map(Number);
-            const taskDate = new Date(task.date + 'T' + `${hour}:${minute}:00`);
-            const now = new Date();
-            const delay = taskDate.getTime() - now.getTime();
-            if (delay > 0) { // any future alarm, even beyond 24h (persistent)
-                const timeoutId = setTimeout(() => {
-                    // loop beep 3 times for persistence
-                    for (let i=0; i<3; i++) {
-                        setTimeout(() => playLongBeep(), i * 5000); // every 5 sec
-                    }
-                    // reschedule for next day if repeat? but we handle repeat on complete
-                }, delay);
-                activeAlarms.set(task.id, timeoutId);
-            }
-        }
-
-        function clearAlarm(taskId) {
-            if (activeAlarms.has(taskId)) {
-                clearTimeout(activeAlarms.get(taskId));
-                activeAlarms.delete(taskId);
-            }
-        }
-
-        // Reschedule all 🔴 alarms on load
-        function rescheduleAllAlarms() {
-            // cancel all existing
-            activeAlarms.forEach((tid, id) => clearTimeout(tid));
-            activeAlarms.clear();
-            activeTasks.forEach(task => scheduleAlarm(task));
-        }
-
-        // Notification permission
+        // notification permission
         if (Notification.permission === 'default') Notification.requestPermission();
 
         function playCompleteFeedback() {
             if (navigator.vibrate) navigator.vibrate(30);
             try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sine'; osc.frequency.value = 600; gain.gain.value = 0.2;
@@ -469,8 +429,12 @@
             const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             return `${parseInt(d)} ${monthNames[parseInt(m)-1]} ${y}`;
         }
-        function activeCountForDate(dateStr) { return activeTasks.filter(t => t.date === dateStr).length; }
 
+        function activeCountForDate(dateStr) {
+            return activeTasks.filter(t => t.date === dateStr).length;
+        }
+
+        // priority order for sorting
         const priorityRank = { '❗':1, '🔴':2, '🟡':3, '🟢':4 };
 
         function renderCalendar() {
@@ -512,10 +476,13 @@
             container.innerHTML = html;
         }
 
+        // render active tasks with priority & sorting
         function renderActiveList() {
             const container = document.getElementById('activeTaskList');
             let filtered = activeTasks.filter(t => t.date === selectedDate);
+            // sort by priority rank
             filtered.sort((a,b) => (priorityRank[a.priority] || 5) - (priorityRank[b.priority] || 5));
+
             if (filtered.length === 0) {
                 container.innerHTML = `<div class="empty-message">✨ no active tasks for this date</div>`;
             } else {
@@ -523,10 +490,9 @@
                 filtered.forEach(t => {
                     const reminderHtml = t.reminder ? `<span class="reminder-badge"><i class="far fa-clock"></i> ${t.reminder}</span>` : '';
                     const repeatHtml = (t.repeat && t.repeat !== 'none') ? `<span class="repeat-badge">↻ ${t.repeat}</span>` : '';
-                    // priority flag hidden (class priority-flag display:none)
                     html += `
                         <div class="task-item" data-id="${t.id}">
-                            <span class="priority-flag" style="display:none;">${t.priority || '🟡'}</span>
+                            <span class="priority-flag">${t.priority || '🟡'}</span>
                             <div class="task-check" data-id="${t.id}" data-action="toggle"></div>
                             <div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div>
                             <div class="task-meta">
@@ -545,11 +511,16 @@
             const container = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
             if (completedTasks.length === 0) {
-                container.innerHTML = `<div class="empty-message" style="padding:0.8rem;">no completed tasks</div>`;
+                container.innerHTML = `<div class="empty-message" style="padding:1rem;">no completed tasks</div>`;
             } else {
                 let html = '';
                 completedTasks.slice().reverse().forEach(t => {
-                    html += `<div class="archive-item" data-archive-id="${t.id}"><div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div><button class="archive-delete-btn" data-archive-id="${t.id}"><i class="fas fa-times-circle"></i></button></div>`;
+                    html += `
+                        <div class="archive-item" data-archive-id="${t.id}">
+                            <div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div>
+                            <button class="archive-delete-btn" data-archive-id="${t.id}"><i class="fas fa-times-circle"></i></button>
+                        </div>
+                    `;
                 });
                 container.innerHTML = html;
                 container.querySelectorAll('.archive-delete-btn').forEach(btn => {
@@ -583,8 +554,8 @@
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
                 playCompleteFeedback();
-                clearAlarm(moved.id); // remove alarm when completed
 
+                // Handle repeat: create next occurrence if needed
                 if (moved.repeat && moved.repeat !== 'none') {
                     const nextTask = { ...moved, id: Date.now() + '-' + Math.random().toString(36).substr(2,6) };
                     const currentDate = new Date(moved.date + 'T12:00:00');
@@ -596,20 +567,48 @@
                     const d = String(currentDate.getDate()).padStart(2,'0');
                     nextTask.date = `${y}-${m}-${d}`;
                     activeTasks.push(nextTask);
-                    if (nextTask.reminder && nextTask.priority === '🔴') scheduleAlarm(nextTask);
+
+                    // schedule reminder for repeated if time exists
+                    if (nextTask.reminder) scheduleNotification(nextTask);
                 }
+
                 save();
-                renderCalendar(); renderActiveList(); renderArchive();
+                renderCalendar();
+                renderActiveList();
+                renderArchive();
             }
         }
 
         function handleDelete(e) {
             const id = e.currentTarget.dataset.id;
-            clearAlarm(id);
             activeTasks = activeTasks.filter(t => t.id !== id);
             save(); renderCalendar(); renderActiveList();
         }
 
+        // notification scheduler
+        function scheduleNotification(task) {
+            if (!task.reminder || Notification.permission !== 'granted') return;
+            const [hour, minute] = task.reminder.split(':').map(Number);
+            const taskDate = new Date(task.date + 'T' + `${hour}:${minute}:00`);
+            const now = new Date();
+            const delay = taskDate.getTime() - now.getTime();
+            if (delay > 0 && delay < 24*60*60*1000) { // only if within next 24h
+                setTimeout(() => {
+                    new Notification('⏰ Task reminder', {
+                        body: `${task.text} (${task.priority})`,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">✅</text></svg>'
+                    });
+                }, delay);
+            }
+        }
+
+        // Reschedule for all tasks with reminder on load
+        function rescheduleAllReminders() {
+            if (Notification.permission !== 'granted') return;
+            activeTasks.forEach(task => { if (task.reminder) scheduleNotification(task); });
+        }
+
+        // modal add with extra fields
         function openModal() {
             document.getElementById('modalDate').innerText = `📅 ${selectedDate}`;
             document.getElementById('modalTaskInput').value = '';
@@ -629,13 +628,19 @@
             const reminder = document.getElementById('modalReminderTime').value || null;
             const newTask = {
                 id: Date.now() + '-' + Math.random().toString(36).substr(2,6),
-                text, date: selectedDate, priority, repeat, reminder
+                text: text,
+                date: selectedDate,
+                priority: priority,
+                repeat: repeat,
+                reminder: reminder,
             };
             activeTasks.push(newTask);
-            if (reminder && priority === '🔴') scheduleAlarm(newTask);
+            if (reminder) scheduleNotification(newTask);
             save();
-            inp.value = ''; closeModal();
-            renderCalendar(); renderActiveList();
+            inp.value = '';
+            closeModal();
+            renderCalendar();
+            renderActiveList();
         }
 
         // swipe
@@ -654,14 +659,15 @@
 
         function jumpToToday() {
             const today = new Date();
-            currentYear = today.getFullYear(); currentMonth = today.getMonth();
+            currentYear = today.getFullYear();
+            currentMonth = today.getMonth();
             selectedDate = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
             renderCalendar(); renderActiveList();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             renderCalendar(); renderActiveList(); renderArchive();
-            rescheduleAllAlarms();
+            rescheduleAllReminders();
 
             const swipeArea = document.getElementById('calendarSwipeArea');
             swipeArea.addEventListener('touchstart', handleTouchStart, { passive: true });
