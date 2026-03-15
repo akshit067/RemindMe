@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · compact · no‑scroll</title>
+    <title>to‑do · full width · no cards · compact</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
         }
 
         body {
-            background: #f5f7fb;
+            background: #f0f4fa;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,34 +22,33 @@
             padding: 6px;
         }
 
-        /* app container fits exactly in one viewport on a typical mobile (600-700px height) */
+        /* app uses full width, minimal borders, no card shadows */
         .app {
-            max-width: 420px;
+            max-width: 480px;
             width: 100%;
             background: white;
-            border-radius: 28px;
-            box-shadow: 0 12px 24px rgba(0, 15, 30, 0.12);
-            padding: 0.9rem 0.8rem 0.8rem 0.8rem;
+            border-radius: 24px;
+            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
             display: flex;
             flex-direction: column;
-            max-height: 95vh;        /* ensure it never overflows vertically */
+            max-height: 98vh;
             height: auto;
-            overflow: hidden;         /* prevent outer scroll */
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
 
-        /* header smaller */
+        /* ultra compact header */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.7rem;
-            padding: 0 0.1rem;
+            margin-bottom: 0.5rem;
         }
 
         .title-area h1 {
-            font-size: 1.9rem;        /* reduced from 2.4rem */
+            font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 0px;
             background: linear-gradient(145deg, #1f3449, #2b4f74);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -57,8 +56,8 @@
         }
 
         .plus-btn {
-            width: 48px;               /* smaller */
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: #1f3449;
             border-radius: 50%;
             display: flex;
@@ -68,50 +67,42 @@
             font-size: 2.2rem;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(25, 55, 80, 0.2);
+            box-shadow: 0 4px 8px rgba(25, 55, 80, 0.15);
             border: none;
-            transition: 0.1s;
-            -webkit-user-select: none;
-            user-select: none;
         }
 
-        .plus-btn:active {
-            background: #2b4f74;
-            transform: scale(0.96);
-        }
-
-        /* active task area limited height */
+        /* full width sections - no card borders */
         .section-title {
             font-weight: 700;
-            font-size: 1rem;
-            margin: 0 0 0.3rem 0.3rem;
+            font-size: 0.95rem;
+            margin: 0.1rem 0 0.2rem 0.2rem;
             color: #1e3b5a;
             display: flex;
             align-items: center;
             gap: 0.3rem;
         }
 
+        /* task list full width, no indents */
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
-            margin-bottom: 0.7rem;
-            max-height: 140px;          /* limited to show ~3 tasks without scroll */
+            gap: 0.35rem;
+            margin-bottom: 0.5rem;
+            max-height: 130px;
             overflow-y: auto;
             padding-right: 2px;
-            border-radius: 16px;
         }
 
         .task-item {
-            background: white;
-            border: 1px solid #dee9f2;
+            background: #f8fbfe;
+            border: 1px solid #e2ecf7;
             border-radius: 40px;
             padding: 0.2rem 0.2rem 0.2rem 0.8rem;
             display: flex;
             align-items: center;
             gap: 0.3rem;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
-            min-height: 48px;
+            width: 100%;
+            min-height: 46px;
         }
 
         .task-check {
@@ -174,17 +165,6 @@
             color: #0369a1;
         }
 
-        .date-badge {
-            font-size: 0.6rem;
-            background: #eaf1fa;
-            padding: 0.15rem 0.5rem;
-            border-radius: 30px;
-            margin-left: 0.3rem;
-            font-weight: 400;
-            color: #2b4f74;
-            white-space: nowrap;
-        }
-
         .task-delete {
             background: transparent;
             border: none;
@@ -194,52 +174,41 @@
             cursor: pointer;
         }
 
-        .task-delete:active {
-            color: #c03d2e;
-        }
-
         .empty-message {
             text-align: center;
             color: #8ba3c2;
-            padding: 0.8rem 0.5rem;
+            padding: 0.7rem 0.5rem;
             background: #f6faff;
             border-radius: 40px;
             font-size: 0.85rem;
+            width: 100%;
         }
 
-        /* archive more compact */
+        /* archive full width */
         .archive-header {
             display: flex;
             align-items: center;
             gap: 0.4rem;
             background: #e3ecf5;
-            padding: 0.6rem 1rem;
-            border-radius: 36px;
-            margin: 0.3rem 0 0.3rem;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            margin: 0.2rem 0 0.3rem;
             border: 1px solid #c5d8f0;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #1f3f60;
-        }
-
-        .archive-header i {
-            font-size: 0.9rem;
-            transition: transform 0.2s;
-        }
-
-        .archive-header .rotate {
-            transform: rotate(90deg);
+            width: 100%;
         }
 
         .archive-list {
             display: none;
             flex-direction: column;
             gap: 0.3rem;
-            margin-bottom: 0.5rem;
-            max-height: 110px;          /* compact archive */
+            margin-bottom: 0.4rem;
+            max-height: 100px;
             overflow-y: auto;
-            padding-right: 2px;
+            width: 100%;
         }
 
         .archive-list.visible {
@@ -249,11 +218,12 @@
         .archive-item {
             background: #f1f7fd;
             border: 1px dashed #adc5e2;
-            border-radius: 32px;
+            border-radius: 30px;
             padding: 0.4rem 0.8rem 0.4rem 1rem;
             display: flex;
             align-items: center;
             opacity: 0.8;
+            width: 100%;
         }
 
         .archive-item .task-content {
@@ -270,17 +240,14 @@
             font-size: 1rem;
             padding: 0.2rem 0.2rem 0.2rem 0.6rem;
             cursor: pointer;
-            opacity: 0.7;
         }
 
-        /* calendar card smaller */
-        .calendar-card {
-            background: white;
-            border-radius: 24px;
-            padding: 0.6rem 0.5rem 0.4rem;
-            border: 1px solid #dae6f2;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
-            margin: 0.2rem 0 0.3rem;
+        /* calendar full width - no card border, just subtle separation */
+        .calendar-section {
+            background: transparent;
+            padding: 0.2rem 0 0.2rem;
+            margin: 0.1rem 0 0;
+            width: 100%;
             touch-action: pan-y pinch-zoom;
         }
 
@@ -288,14 +255,15 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #f2f8ff;
+            background: #eef4fc;
             padding: 0.4rem 0.8rem;
-            border-radius: 40px;
+            border-radius: 30px;
             margin-bottom: 0.5rem;
             font-weight: 600;
             font-size: 0.9rem;
             color: #1e3f60;
             cursor: pointer;
+            width: 100%;
         }
 
         .selected-date-row span:last-child {
@@ -306,7 +274,8 @@
         }
 
         .cal-header {
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.2rem;
+            text-align: center;
         }
 
         .cal-month {
@@ -323,12 +292,14 @@
             color: #38658f;
             margin-bottom: 0.2rem;
             font-size: 0.7rem;
+            width: 100%;
         }
 
         .month-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
+            width: 100%;
         }
 
         .cal-cell {
@@ -339,12 +310,13 @@
             justify-content: center;
             background: #f9fcff;
             border-radius: 24px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #1e3c5c;
             border: 1px solid transparent;
             cursor: pointer;
             padding: 2px 0;
+            width: 100%;
         }
 
         .cal-cell.has-tasks {
@@ -376,7 +348,7 @@
             color: #ffddb0;
         }
 
-        /* modal still normal size */
+        /* modal unchanged */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -397,118 +369,29 @@
             padding: 1.5rem 1.2rem;
             box-shadow: 0 30px 50px rgba(0,10,30,0.2);
         }
-
-        .modal-date {
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: #1d3f62;
-            background: #e9f2fc;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .modal-input {
-            padding: 1rem 1.2rem;
-            border: 2px solid #c9d9ee;
-            border-radius: 50px;
-            font-size: 0.95rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .options-row {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .option-pill {
-            flex: 1 0 auto;
-            background: #f0f5fd;
-            border-radius: 36px;
-            padding: 0.5rem 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            border: 2px solid transparent;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #1e3f60;
-        }
-
-        .option-pill.selected {
-            background: #fff1dc;
-            border-color: #e67e22;
-        }
-
-        .time-picker-row {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.2rem;
-            background: #f0f5fd;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-        }
-
-        .time-picker-row input[type="time"] {
-            border: none;
-            background: transparent;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #1d3f62;
-            outline: none;
-            flex: 1;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.6rem;
-        }
-
-        .modal-btn {
-            background: #1f3449;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .modal-btn.cancel {
-            background: #e2eaf3;
-            color: #1d3f62;
-        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="app">
-    <!-- smaller header -->
+    <!-- header -->
     <div class="header">
         <div class="title-area"><h1>TO-DO</h1></div>
-        <div class="plus-btn" id="plusBtn" aria-label="add task">+</div>
+        <div class="plus-btn" id="plusBtn">+</div>
     </div>
 
-    <!-- active tasks compact -->
+    <!-- active tasks full width -->
     <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading">2026-03-15</span></div>
     <div id="activeTaskList" class="task-list"></div>
 
-    <!-- archive compact -->
+    <!-- archive full width -->
     <div class="archive-header" id="archiveToggle">
         <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
     </div>
     <div id="archiveListContainer" class="archive-list"></div>
 
-    <!-- calendar card (smaller) -->
-    <div class="calendar-card" id="calendarSwipeArea">
+    <!-- calendar full width (no card) -->
+    <div class="calendar-section" id="calendarSwipeArea">
         <div class="selected-date-row" id="todayTap">
             <span>📅</span>
             <span id="selectedDateDisplay">15 Mar 2026</span>
@@ -550,7 +433,7 @@
 
 <script>
     (function() {
-        // --- data with reminder & repeat fields
+        // data (same as before)
         let activeTasks = [];
         let completedTasks = [];
 
@@ -583,7 +466,6 @@
             ];
         }
 
-        // state
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
         let selectedDate = (() => {
@@ -767,7 +649,7 @@
             const container = document.getElementById('activeTaskList');
             const filtered = activeTasks.filter(t => t.date === selectedDate);
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-message">✨ no tasks</div>`;
+                container.innerHTML = `<div class="empty-message">✨ no tasks for this date</div>`;
             } else {
                 let html = '';
                 filtered.forEach(t => {
@@ -796,7 +678,7 @@
             const container = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
             if (completedTasks.length === 0) {
-                container.innerHTML = `<div class="empty-message" style="padding:0.5rem;">no completed</div>`;
+                container.innerHTML = `<div class="empty-message" style="padding:0.5rem;">no completed tasks</div>`;
             } else {
                 let html = '';
                 completedTasks.slice().reverse().forEach(t => {
