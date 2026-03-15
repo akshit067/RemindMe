@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · full width · no cards · compact</title>
+    <title>to‑do · full length · complete modal</title>
     <style>
         * {
             margin: 0;
@@ -14,50 +14,50 @@
         }
 
         body {
-            background: #f0f4fa;
+            background: #eef2f7;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 6px;
+            padding: 0;
+            margin: 0;
         }
 
-        /* app uses full width, minimal borders, no card shadows */
+        /* app uses FULL available height, no artificial limits */
         .app {
             max-width: 480px;
             width: 100%;
+            height: 100vh;              /* full viewport height */
             background: white;
-            border-radius: 24px;
+            border-radius: 0;            /* straight edges for max space */
             padding: 0.8rem 0.8rem 0.6rem 0.8rem;
             display: flex;
             flex-direction: column;
-            max-height: 98vh;
-            height: auto;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;            /* prevent body scroll, internal scrolls handled */
+            box-shadow: none;
         }
 
-        /* ultra compact header */
+        /* header compact */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            flex-shrink: 0;
         }
 
         .title-area h1 {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 700;
-            letter-spacing: 0px;
             background: linear-gradient(145deg, #1f3449, #2b4f74);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1;
+            line-height: 1.1;
         }
 
         .plus-btn {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             background: #1f3449;
             border-radius: 50%;
             display: flex;
@@ -67,11 +67,12 @@
             font-size: 2.2rem;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(25, 55, 80, 0.15);
+            box-shadow: 0 4px 10px rgba(25, 55, 80, 0.2);
             border: none;
+            flex-shrink: 0;
         }
 
-        /* full width sections - no card borders */
+        /* section titles */
         .section-title {
             font-weight: 700;
             font-size: 0.95rem;
@@ -80,15 +81,18 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            flex-shrink: 0;
         }
 
-        /* task list full width, no indents */
+        /* active task list - takes appropriate height */
         .task-list {
             display: flex;
             flex-direction: column;
             gap: 0.35rem;
-            margin-bottom: 0.5rem;
-            max-height: 130px;
+            margin-bottom: 0.4rem;
+            flex: 0 0 auto;
+            max-height: 20vh;           /* relative to viewport, ~20% */
+            min-height: 90px;
             overflow-y: auto;
             padding-right: 2px;
         }
@@ -103,6 +107,7 @@
             gap: 0.3rem;
             width: 100%;
             min-height: 46px;
+            flex-shrink: 0;
         }
 
         .task-check {
@@ -184,7 +189,7 @@
             width: 100%;
         }
 
-        /* archive full width */
+        /* archive */
         .archive-header {
             display: flex;
             align-items: center;
@@ -192,23 +197,25 @@
             background: #e3ecf5;
             padding: 0.5rem 1rem;
             border-radius: 30px;
-            margin: 0.2rem 0 0.3rem;
+            margin: 0.1rem 0 0.3rem;
             border: 1px solid #c5d8f0;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
             color: #1f3f60;
             width: 100%;
+            flex-shrink: 0;
         }
 
         .archive-list {
             display: none;
             flex-direction: column;
             gap: 0.3rem;
-            margin-bottom: 0.4rem;
-            max-height: 100px;
+            margin-bottom: 0.3rem;
+            max-height: 12vh;           /* relative to screen */
             overflow-y: auto;
             width: 100%;
+            flex-shrink: 0;
         }
 
         .archive-list.visible {
@@ -224,6 +231,7 @@
             align-items: center;
             opacity: 0.8;
             width: 100%;
+            flex-shrink: 0;
         }
 
         .archive-item .task-content {
@@ -242,13 +250,17 @@
             cursor: pointer;
         }
 
-        /* calendar full width - no card border, just subtle separation */
+        /* calendar section - takes remaining height */
         .calendar-section {
             background: transparent;
-            padding: 0.2rem 0 0.2rem;
+            padding: 0.1rem 0 0;
             margin: 0.1rem 0 0;
             width: 100%;
             touch-action: pan-y pinch-zoom;
+            flex: 1 1 auto;              /* expand to fill vertical space */
+            display: flex;
+            flex-direction: column;
+            min-height: 0;                /* important for flex child overflow */
         }
 
         .selected-date-row {
@@ -258,12 +270,13 @@
             background: #eef4fc;
             padding: 0.4rem 0.8rem;
             border-radius: 30px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             font-weight: 600;
             font-size: 0.9rem;
             color: #1e3f60;
             cursor: pointer;
             width: 100%;
+            flex-shrink: 0;
         }
 
         .selected-date-row span:last-child {
@@ -276,6 +289,7 @@
         .cal-header {
             margin-bottom: 0.2rem;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .cal-month {
@@ -293,6 +307,7 @@
             margin-bottom: 0.2rem;
             font-size: 0.7rem;
             width: 100%;
+            flex-shrink: 0;
         }
 
         .month-grid {
@@ -300,6 +315,8 @@
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
             width: 100%;
+            flex: 1 1 auto;              /* grid takes all remaining space */
+            min-height: 0;                /* essential for grid to shrink */
         }
 
         .cal-cell {
@@ -317,6 +334,7 @@
             cursor: pointer;
             padding: 2px 0;
             width: 100%;
+            height: 100%;                 /* fill grid cell */
         }
 
         .cal-cell.has-tasks {
@@ -348,7 +366,7 @@
             color: #ffddb0;
         }
 
-        /* modal unchanged */
+        /* modal - fully restored */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -364,10 +382,129 @@
         .modal-card {
             background: white;
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             border-radius: 40px;
-            padding: 1.5rem 1.2rem;
+            padding: 1.8rem 1.5rem;
             box-shadow: 0 30px 50px rgba(0,10,30,0.2);
+        }
+
+        .modal-date {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #1d3f62;
+            background: #e9f2fc;
+            padding: 0.7rem 1rem;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-input {
+            padding: 1rem 1.2rem;
+            border: 2px solid #c9d9ee;
+            border-radius: 50px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 1.2rem;
+        }
+
+        .options-row {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .option-pill {
+            flex: 1 0 auto;
+            background: #f0f5fd;
+            border-radius: 40px;
+            padding: 0.6rem 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e3f60;
+        }
+
+        .option-pill i {
+            font-size: 0.9rem;
+        }
+
+        .option-pill.selected {
+            background: #fff1dc;
+            border-color: #e67e22;
+        }
+
+        .time-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            background: #f0f5fd;
+            padding: 0.7rem 1.2rem;
+            border-radius: 50px;
+        }
+
+        .time-picker-row i {
+            font-size: 1.1rem;
+            color: #1f3449;
+        }
+
+        .time-picker-row input[type="time"] {
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1d3f62;
+            outline: none;
+            flex: 1;
+        }
+
+        /* restore AM/PM by using native time input (already shows local format) */
+        .reminder-badge {
+            font-size: 1.2rem;
+            cursor: pointer;
+            background: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            background: #1f3449;
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .modal-btn.cancel {
+            background: #e2eaf3;
+            color: #1d3f62;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* long press hint */
+        .cal-cell.long-press-hint {
+            background: #d4e3ff;
+            transition: background 0.1s;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -380,17 +517,17 @@
         <div class="plus-btn" id="plusBtn">+</div>
     </div>
 
-    <!-- active tasks full width -->
+    <!-- active tasks -->
     <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading">2026-03-15</span></div>
     <div id="activeTaskList" class="task-list"></div>
 
-    <!-- archive full width -->
+    <!-- archive -->
     <div class="archive-header" id="archiveToggle">
         <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
     </div>
     <div id="archiveListContainer" class="archive-list"></div>
 
-    <!-- calendar full width (no card) -->
+    <!-- calendar (fills remaining length) -->
     <div class="calendar-section" id="calendarSwipeArea">
         <div class="selected-date-row" id="todayTap">
             <span>📅</span>
@@ -405,24 +542,27 @@
         <div id="calendarGrid" class="month-grid"></div>
     </div>
 
-    <!-- modal -->
+    <!-- FULL modal with Cancel / ADD -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate">📅 2026-03-15</div>
             <input type="text" class="modal-input" id="modalTaskInput" placeholder="e.g., buy milk" autofocus>
             
+            <!-- repeat options -->
             <div class="options-row">
                 <div class="option-pill" id="repeatNone" data-repeat="none"><i class="far fa-circle"></i> None</div>
                 <div class="option-pill" id="repeatDaily" data-repeat="daily"><i class="fas fa-sun"></i> Daily</div>
                 <div class="option-pill" id="repeatWeekly" data-repeat="weekly"><i class="fas fa-calendar-week"></i> Weekly</div>
             </div>
 
+            <!-- time picker with AM/PM (browser shows locale) -->
             <div class="time-picker-row">
                 <i class="fas fa-clock"></i>
                 <input type="time" id="reminderTime" value="09:00">
-                <span class="reminder-badge" id="reminderToggle" style="cursor:pointer;">🔔</span>
+                <span class="reminder-badge" id="reminderToggle">🔔</span>
             </div>
 
+            <!-- Cancel and ADD buttons restored -->
             <div class="modal-actions">
                 <button class="modal-btn cancel" id="modalCancel">Cancel</button>
                 <button class="modal-btn" id="modalAdd">ADD</button>
@@ -617,7 +757,6 @@
         }
 
         function renderMonth(container) {
-            container.className = 'month-grid';
             const firstDay = new Date(currentYear, currentMonth, 1).getDay();
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const today = new Date();
