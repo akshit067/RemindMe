@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · mobile + swipe · sound</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>to‑do · alarm · no scroll</title>
     <style>
         * {
             margin: 0;
@@ -17,467 +17,341 @@
             background: #f5f7fb;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
-            padding: 0 0 20px 0;
+            height: 100vh;
+            overflow: hidden;
+            padding: 0;
         }
 
         .app {
             max-width: 480px;
             width: 100%;
+            height: 100vh;
+            max-height: 100vh;
             background: white;
-            border-radius: 32px 32px 28px 28px;
+            border-radius: 32px 32px 0 0;
             box-shadow: 0 15px 30px rgba(0, 15, 30, 0.1);
-            margin: 12px 12px 20px 12px;
-            padding: 1.5rem 1rem 1.8rem 1rem;
+            margin: 0;
+            padding: 1rem 1rem 0.8rem 1rem;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        /* header with + icon (bigger touch target) */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding: 0 0.2rem;
+            margin-bottom: 0.8rem;
+            flex-shrink: 0;
         }
 
         .title-area h1 {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            letter-spacing: 1px;
             background: linear-gradient(145deg, #1f3449, #2b4f74);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .plus-btn {
-            width: 60px;
-            height: 60px;
+            width: 52px;
+            height: 52px;
             background: #1f3449;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 10px 18px rgba(25, 55, 80, 0.25);
+            box-shadow: 0 8px 14px rgba(25, 55, 80, 0.25);
             border: none;
-            transition: 0.1s;
-            -webkit-user-select: none;
-            user-select: none;
+            flex-shrink: 0;
         }
+        .plus-btn:active { background: #2b4f74; transform: scale(0.96); }
 
-        .plus-btn:active {
-            background: #2b4f74;
-            transform: scale(0.96);
-        }
-
-        /* active task list */
         .section-title {
             font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0 0 0.6rem 0.5rem;
+            font-size: 1.1rem;
+            margin: 0 0 0.3rem 0.5rem;
             color: #1e3b5a;
             display: flex;
             align-items: center;
             gap: 0.4rem;
-        }
-
-        .section-title i {
-            color: #e67e22;
+            flex-shrink: 0;
         }
 
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            margin-bottom: 1.8rem;
-            max-height: 300px;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
             overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
             padding-right: 4px;
         }
 
         .task-item {
             background: white;
             border: 1px solid #dee9f2;
-            border-radius: 60px;
-            padding: 0.4rem 0.4rem 0.4rem 1.2rem;
+            border-radius: 50px;
+            padding: 0.3rem 0.3rem 0.3rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: 0.1s;
+            gap: 0.3rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            flex-shrink: 0;
         }
 
-        .task-item:active {
-            background: #f7faff;
+        /* priority flag hidden – no display */
+        .priority-flag {
+            display: none;
         }
 
         .task-check {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 30px;
             border: 2.5px solid #b6cde5;
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             flex-shrink: 0;
         }
-
-        .task-check.completed {
-            background: #1f8b4c;
-            border-color: #0f682f;
-            color: white;
-        }
+        .task-check.completed { background: #1f8b4c; border-color: #0f682f; color: white; }
 
         .task-content {
             flex: 1;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
             color: #1a3146;
             word-break: break-word;
-            padding: 0.4rem 0;
+            padding: 0.2rem 0;
         }
 
-        .date-badge {
-            font-size: 0.7rem;
-            background: #eaf1fa;
-            padding: 0.25rem 0.8rem;
-            border-radius: 30px;
-            margin-left: 0.5rem;
-            font-weight: 400;
-            color: #2b4f74;
+        .task-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            margin-right: 2px;
+        }
+        .reminder-badge {
+            background: #fdefcb;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 0.65rem;
+            color: #b45b0f;
             white-space: nowrap;
+        }
+        .repeat-badge {
+            background: #e0e9f5;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 0.65rem;
+            color: #1d4e7c;
+        }
+        .date-badge {
+            font-size: 0.65rem;
+            background: #eaf1fa;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            color: #2b4f74;
         }
 
         .task-delete {
             background: transparent;
             border: none;
             color: #9bb3cf;
-            font-size: 1.4rem;
-            padding: 0.6rem 1rem 0.6rem 0.2rem;
+            font-size: 1.3rem;
+            padding: 0.5rem 0.5rem 0.5rem 0.2rem;
             cursor: pointer;
-            transition: 0.1s;
         }
-
-        .task-delete:active {
-            color: #c03d2e;
-        }
+        .task-delete:active { color: #c03d2e; }
 
         .empty-message {
             text-align: center;
             color: #8ba3c2;
-            padding: 1.8rem 1rem;
+            padding: 1.2rem 1rem;
             background: #f6faff;
-            border-radius: 50px;
-            font-size: 0.95rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
         }
 
-        /* archive toggle (bigger touch area) */
         .archive-header {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
             background: #e3ecf5;
-            padding: 1rem 1.2rem;
+            padding: 0.7rem 1.2rem;
             border-radius: 40px;
-            margin: 1rem 0 0.6rem;
+            margin: 0.3rem 0 0.3rem;
             border: 1px solid #c5d8f0;
             cursor: pointer;
             font-weight: 600;
+            font-size: 0.95rem;
             color: #1f3f60;
-            -webkit-user-select: none;
+            flex-shrink: 0;
         }
-
-        .archive-header i {
-            font-size: 1.1rem;
-            transition: transform 0.2s;
-        }
-
-        .archive-header .rotate {
-            transform: rotate(90deg);
-        }
+        .archive-header i { transition: transform 0.2s; }
+        .archive-header .rotate { transform: rotate(90deg); }
 
         .archive-list {
             display: none;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            max-height: 200px;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
             overflow-y: auto;
-            padding-right: 4px;
+            flex: 0 1 auto;
+            max-height: 100px;
         }
-
-        .archive-list.visible {
-            display: flex;
-        }
+        .archive-list.visible { display: flex; }
 
         .archive-item {
             background: #f1f7fd;
             border: 1px dashed #adc5e2;
             border-radius: 40px;
-            padding: 0.7rem 1.2rem 0.7rem 1.5rem;
+            padding: 0.5rem 1rem 0.5rem 1.2rem;
             display: flex;
             align-items: center;
             opacity: 0.85;
-            position: relative;
         }
-
         .archive-item .task-content {
             text-decoration: line-through;
             color: #4f6f91;
             flex: 1;
         }
-
         .archive-delete-btn {
             background: transparent;
             border: none;
             color: #c03d2e;
-            font-size: 1.2rem;
-            padding: 0.4rem 0.4rem 0.4rem 1rem;
+            font-size: 1.1rem;
+            padding: 0.2rem 0.2rem 0.2rem 0.8rem;
             cursor: pointer;
-            opacity: 0.7;
-        }
-        .archive-delete-btn:active {
-            opacity: 1;
-            transform: scale(1.1);
         }
 
-        /* calendar card */
         .calendar-card {
             background: white;
-            border-radius: 32px;
-            padding: 1.2rem 0.8rem 1rem;
+            border-radius: 28px;
+            padding: 0.8rem 0.6rem 0.5rem;
             border: 1px solid #dae6f2;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-            margin: 0.5rem 0 0.8rem;
-            touch-action: pan-y pinch-zoom; /* allow horizontal swipe but keep vertical scroll */
+            margin: 0.3rem 0 0;
+            touch-action: pan-y pinch-zoom;
+            flex-shrink: 0;
         }
-
         .selected-date-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #f2f8ff;
-            padding: 0.8rem 1.2rem;
-            border-radius: 50px;
-            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            margin-bottom: 0.6rem;
             font-weight: 600;
+            font-size: 0.9rem;
             color: #1e3f60;
             cursor: pointer;
-            transition: background 0.1s;
         }
-        .selected-date-row:active {
-            background: #dde9f5;
-        }
-
         .selected-date-row span:last-child {
             background: white;
-            padding: 0.3rem 1.2rem;
+            padding: 0.2rem 1rem;
             border-radius: 30px;
-            font-size: 1rem;
         }
-
-        .cal-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.8rem;
-            padding: 0 0.2rem;
-            position: relative;
-        }
-
-        .cal-month {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #1d3f62;
-        }
-
+        .cal-header { display: flex; justify-content: center; margin-bottom: 0.3rem; }
+        .cal-month { font-weight: 700; font-size: 1.2rem; color: #1d3f62; }
         .weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            font-weight: 600;
-            color: #38658f;
-            margin-bottom: 0.3rem;
-            font-size: 0.8rem;
+            display: grid; grid-template-columns: repeat(7,1fr); text-align: center;
+            font-weight: 600; color: #38658f; font-size: 0.7rem; margin-bottom: 0.2rem;
         }
-
-        .month-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-        }
-
+        .month-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
         .cal-cell {
-            aspect-ratio: 1/1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #f9fcff;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #1e3c5c;
-            border: 1px solid transparent;
-            cursor: pointer;
-            padding: 4px 0;
+            aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: #f9fcff; border-radius: 24px; font-size: 0.8rem; font-weight: 500; color: #1e3c5c;
+            border: 1px solid transparent; cursor: pointer; padding: 2px 0;
         }
+        .cal-cell.has-tasks { background: #e1effb; border-color: #9bbde0; }
+        .cal-cell.today { background: #2b4f74; color: white; }
+        .cal-cell.selected { background: #ffe1b3; border: 2px solid #e67e22; }
+        .task-dots { font-size: 0.5rem; letter-spacing: 1px; margin-top: 1px; }
 
-        .cal-cell:active {
-            background: #e3effa;
-        }
-
-        .cal-cell.has-tasks {
-            background: #e1effb;
-            border-color: #9bbde0;
-        }
-
-        .cal-cell.today {
-            background: #2b4f74;
-            color: white;
-            font-weight: 700;
-        }
-
-        .cal-cell.selected {
-            background: #ffe1b3;
-            border: 2px solid #e67e22;
-            color: #1d2b3a;
-            font-weight: 700;
-        }
-
-        .task-dots {
-            font-size: 0.6rem;
-            letter-spacing: 1.5px;
-            color: #2b4f74;
-            margin-top: 2px;
-        }
-
-        .today .task-dots {
-            color: #ffddb0;
-        }
-
-        .selected .task-dots {
-            color: #a6561c;
-        }
-
-        /* modal */
+        /* modal - fits without scroll */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-            padding: 1rem;
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); align-items: center; justify-content: center;
+            z-index: 200; padding: 1rem;
         }
-
         .modal-card {
-            background: white;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 48px;
-            padding: 2rem 1.5rem;
-            box-shadow: 0 30px 50px rgba(0,10,30,0.2);
+            background: white; width: 100%; max-width: 380px; border-radius: 40px; padding: 1.5rem 1.2rem;
         }
-
         .modal-date {
-            font-weight: 700;
-            font-size: 1.7rem;
-            color: #1d3f62;
-            background: #e9f2fc;
-            padding: 0.8rem 1rem;
-            border-radius: 60px;
-            text-align: center;
-            margin-bottom: 1.2rem;
+            font-weight: 700; font-size: 1.4rem; color: #1d3f62; background: #e9f2fc;
+            padding: 0.6rem 0.8rem; border-radius: 50px; text-align: center; margin-bottom: 1rem;
         }
-
-        .modal-input {
-            padding: 1.2rem 1.5rem;
-            border: 2px solid #c9d9ee;
-            border-radius: 60px;
-            font-size: 1rem;
-            width: 100%;
-            margin-bottom: 1.5rem;
+        .modal-input, .modal-select {
+            padding: 0.8rem 1rem; border: 2px solid #c9d9ee; border-radius: 50px;
+            font-size: 0.9rem; width: 100%; margin-bottom: 0.8rem;
         }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.8rem;
-            justify-content: flex-end;
-        }
-
+        .row-duo { display: flex; gap: 8px; margin-bottom: 0.8rem; }
+        .modal-actions { display: flex; gap: 0.6rem; }
         .modal-btn {
-            background: #1f3449;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            flex: 1;
+            background: #1f3449; color: white; border: none; padding: 0.8rem 1.2rem;
+            border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; flex: 1;
         }
-
-        .modal-btn.cancel {
-            background: #e2eaf3;
-            color: #1d3f62;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.97);
-        }
+        .modal-btn.cancel { background: #e2eaf3; color: #1d3f62; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="app">
-    <!-- header with big + button -->
     <div class="header">
         <div class="title-area"><h1>TO-DO</h1></div>
-        <div class="plus-btn" id="plusBtn" aria-label="add task">+</div>
+        <div class="plus-btn" id="plusBtn">+</div>
     </div>
 
-    <!-- active tasks for selected date -->
     <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading">2026-03-15</span></div>
     <div id="activeTaskList" class="task-list"></div>
 
-    <!-- archive (collapsible, with individual delete) -->
     <div class="archive-header" id="archiveToggle">
         <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
     </div>
     <div id="archiveListContainer" class="archive-list"></div>
 
-    <!-- calendar card with swipe -->
     <div class="calendar-card" id="calendarSwipeArea">
         <div class="selected-date-row" id="todayTap">
-            <span>📅</span>
-            <span id="selectedDateDisplay">15 Mar 2026</span>
+            <span>📅</span> <span id="selectedDateDisplay">15 Mar 2026</span>
         </div>
-        <div class="cal-header">
-            <span class="cal-month" id="monthYearDisplay">March 2026</span>
-        </div>
-        <div class="weekdays">
-            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-        </div>
+        <div class="cal-header"><span class="cal-month" id="monthYearDisplay">March 2026</span></div>
+        <div class="weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
         <div id="calendarGrid" class="month-grid"></div>
     </div>
 
-    <!-- modal for quick add -->
+    <!-- modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate">📅 2026-03-15</div>
             <input type="text" class="modal-input" id="modalTaskInput" placeholder="e.g., buy milk" autofocus>
+            <div class="row-duo">
+                <select class="modal-select" id="modalPriority">
+                    <option value="🔴">🔴 High</option>
+                    <option value="🟡">🟡 Medium</option>
+                    <option value="🟢">🟢 Low</option>
+                    <option value="❗">❗ Urgent</option>
+                </select>
+                <select class="modal-select" id="modalRepeat">
+                    <option value="none">no repeat</option>
+                    <option value="daily">daily</option>
+                    <option value="weekly">weekly</option>
+                    <option value="monthly">monthly</option>
+                </select>
+            </div>
+            <input type="time" class="modal-input" id="modalReminderTime" placeholder="Reminder time">
             <div class="modal-actions">
                 <button class="modal-btn cancel" id="modalCancel">Cancel</button>
                 <button class="modal-btn" id="modalAdd">ADD</button>
@@ -488,21 +362,14 @@
 
 <script>
     (function() {
-        // --- data
         let activeTasks = [];
         let completedTasks = [];
-
-        const STORAGE_KEY = 'mobile_todo_archive';
+        const STORAGE_KEY = 'todo_alarm_scrollfix';
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-            try {
-                const data = JSON.parse(stored);
-                activeTasks = data.active || [];
-                completedTasks = data.completed || [];
-            } catch (e) { resetSample(); }
-        } else {
-            resetSample();
-        }
+            try { const data = JSON.parse(stored); activeTasks = data.active || []; completedTasks = data.completed || []; }
+            catch (e) { resetSample(); }
+        } else { resetSample(); }
 
         function resetSample() {
             const today = new Date();
@@ -510,48 +377,89 @@
             const m = String(today.getMonth()+1).padStart(2,'0');
             const d = String(today.getDate()).padStart(2,'0');
             activeTasks = [
-                { id: 'a1', text: 'cbse syllabus', date: `${y}-${m}-05` },
-                { id: 'a2', text: 'yoga / stretch', date: `${y}-${m}-${d}` },
-                { id: 'a3', text: 'team meeting', date: `${y}-${m}-12` },
-                { id: 'a4', text: 'call electrician', date: `${y}-${m}-15` },
+                { id: 'a1', text: 'cbse syllabus', date: `${y}-${m}-05`, priority: '🔴', repeat: 'none', reminder: null },
+                { id: 'a2', text: 'yoga / stretch', date: `${y}-${m}-${d}`, priority: '🟢', repeat: 'daily', reminder: '08:00' },
+                { id: 'a3', text: 'team meeting', date: `${y}-${m}-12`, priority: '❗', repeat: 'weekly', reminder: '14:30' },
+                { id: 'a4', text: 'call electrician', date: `${y}-${m}-15`, priority: '🟡', repeat: 'none', reminder: null },
             ];
             completedTasks = [
-                { id: 'c1', text: 'read 30 pages', date: `${y}-${m}-${d}` },
-                { id: 'c2', text: 'buy groceries', date: `${y}-${m}-07` },
+                { id: 'c1', text: 'read 30 pages', date: `${y}-${m}-${d}`, priority: '🟢', repeat: 'none' },
+                { id: 'c2', text: 'buy groceries', date: `${y}-${m}-07`, priority: '🟡', repeat: 'weekly' },
             ];
         }
 
-        // state
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
         let selectedDate = (() => {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
         })();
-
         let archiveVisible = false;
 
-        // --- beep + vibration ---
-        function playCompleteFeedback() {
-            // vibration (if supported)
-            if (navigator.vibrate) navigator.vibrate(30);
-            // beep using Web Audio API (simple 500Hz tone for 120ms)
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.type = 'sine';
-                oscillator.frequency.value = 600;
-                gainNode.gain.value = 0.2;
-                oscillator.connect(gainNode).connect(audioCtx.destination);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.12);
-                // resume if suspended
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-            } catch (e) { /* fallback: no sound */ }
+        // ---------- PERSISTENT ALARM for 🔴 tasks (long beep) ----------
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let activeAlarms = new Map(); // store timeoutId per task id
+
+        function playLongBeep() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 880; // higher pitch for alarm
+            gain.gain.value = 0.3;
+            osc.connect(gain).connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 4.0); // 4 second long beep
         }
 
-        // helpers
+        function scheduleAlarm(task) {
+            if (!task.reminder || task.priority !== '🔴') return; // only 🔴 tasks get persistent alarm
+            const [hour, minute] = task.reminder.split(':').map(Number);
+            const taskDate = new Date(task.date + 'T' + `${hour}:${minute}:00`);
+            const now = new Date();
+            const delay = taskDate.getTime() - now.getTime();
+            if (delay > 0) { // any future alarm, even beyond 24h (persistent)
+                const timeoutId = setTimeout(() => {
+                    // loop beep 3 times for persistence
+                    for (let i=0; i<3; i++) {
+                        setTimeout(() => playLongBeep(), i * 5000); // every 5 sec
+                    }
+                    // reschedule for next day if repeat? but we handle repeat on complete
+                }, delay);
+                activeAlarms.set(task.id, timeoutId);
+            }
+        }
+
+        function clearAlarm(taskId) {
+            if (activeAlarms.has(taskId)) {
+                clearTimeout(activeAlarms.get(taskId));
+                activeAlarms.delete(taskId);
+            }
+        }
+
+        // Reschedule all 🔴 alarms on load
+        function rescheduleAllAlarms() {
+            // cancel all existing
+            activeAlarms.forEach((tid, id) => clearTimeout(tid));
+            activeAlarms.clear();
+            activeTasks.forEach(task => scheduleAlarm(task));
+        }
+
+        // Notification permission
+        if (Notification.permission === 'default') Notification.requestPermission();
+
+        function playCompleteFeedback() {
+            if (navigator.vibrate) navigator.vibrate(30);
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.value = 600; gain.gain.value = 0.2;
+                osc.connect(gain).connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.12);
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+            } catch (e) {}
+        }
+
         function save() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({ active: activeTasks, completed: completedTasks }));
         }
@@ -561,29 +469,20 @@
             const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             return `${parseInt(d)} ${monthNames[parseInt(m)-1]} ${y}`;
         }
+        function activeCountForDate(dateStr) { return activeTasks.filter(t => t.date === dateStr).length; }
 
-        function activeCountForDate(dateStr) {
-            return activeTasks.filter(t => t.date === dateStr).length;
-        }
+        const priorityRank = { '❗':1, '🔴':2, '🟡':3, '🟢':4 };
 
-        // render calendar (month only)
         function renderCalendar() {
             const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
             document.getElementById('monthYearDisplay').innerText = `${monthNames[currentMonth]} ${currentYear}`;
             document.getElementById('selectedDateDisplay').innerText = formatDisplay(selectedDate);
             document.getElementById('selectedDateHeading').innerText = selectedDate;
-
-            const grid = document.getElementById('calendarGrid');
-            renderMonth(grid);
-
+            renderMonth(document.getElementById('calendarGrid'));
             document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
                 cell.addEventListener('click', (e) => {
                     const newDate = cell.dataset.date;
-                    if (newDate) {
-                        selectedDate = newDate;
-                        renderCalendar();
-                        renderActiveList();
-                    }
+                    if (newDate) { selectedDate = newDate; renderCalendar(); renderActiveList(); }
                 });
             });
         }
@@ -594,7 +493,6 @@
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const today = new Date();
             const isCurrentMonth = (today.getFullYear() === currentYear && today.getMonth() === currentMonth);
-
             let html = '';
             for (let i = 0; i < 42; i++) {
                 const dayNum = i - firstDay + 1;
@@ -607,29 +505,33 @@
                     if (count > 0) cls += ' has-tasks';
                     if (isToday) cls += ' today';
                     if (isSelected) cls += ' selected';
-
                     const dots = '●'.repeat(Math.min(count, 5));
                     html += `<div class="${cls}" data-date="${dateStr}"><span>${dayNum}</span><span class="task-dots">${dots}</span></div>`;
-                } else {
-                    html += `<div class="cal-cell" style="background:transparent; pointer-events:none;"></div>`;
-                }
+                } else { html += `<div class="cal-cell" style="background:transparent; pointer-events:none;"></div>`; }
             }
             container.innerHTML = html;
         }
 
-        // render active tasks for selected date
         function renderActiveList() {
             const container = document.getElementById('activeTaskList');
-            const filtered = activeTasks.filter(t => t.date === selectedDate);
+            let filtered = activeTasks.filter(t => t.date === selectedDate);
+            filtered.sort((a,b) => (priorityRank[a.priority] || 5) - (priorityRank[b.priority] || 5));
             if (filtered.length === 0) {
                 container.innerHTML = `<div class="empty-message">✨ no active tasks for this date</div>`;
             } else {
                 let html = '';
                 filtered.forEach(t => {
+                    const reminderHtml = t.reminder ? `<span class="reminder-badge"><i class="far fa-clock"></i> ${t.reminder}</span>` : '';
+                    const repeatHtml = (t.repeat && t.repeat !== 'none') ? `<span class="repeat-badge">↻ ${t.repeat}</span>` : '';
+                    // priority flag hidden (class priority-flag display:none)
                     html += `
                         <div class="task-item" data-id="${t.id}">
+                            <span class="priority-flag" style="display:none;">${t.priority || '🟡'}</span>
                             <div class="task-check" data-id="${t.id}" data-action="toggle"></div>
                             <div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div>
+                            <div class="task-meta">
+                                ${reminderHtml} ${repeatHtml}
+                            </div>
                             <button class="task-delete" data-id="${t.id}" data-action="delete"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
@@ -637,47 +539,31 @@
                 container.innerHTML = html;
             }
             attachActiveListeners();
-            updateStats();  // though stats row removed, keep internal for monthCount if needed
         }
 
-        // render archive with individual delete button
         function renderArchive() {
             const container = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
             if (completedTasks.length === 0) {
-                container.innerHTML = `<div class="empty-message" style="padding:1rem;">no completed tasks</div>`;
+                container.innerHTML = `<div class="empty-message" style="padding:0.8rem;">no completed tasks</div>`;
             } else {
                 let html = '';
                 completedTasks.slice().reverse().forEach(t => {
-                    html += `
-                        <div class="archive-item" data-archive-id="${t.id}">
-                            <div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div>
-                            <button class="archive-delete-btn" data-archive-id="${t.id}" aria-label="delete completed"><i class="fas fa-times-circle"></i></button>
-                        </div>
-                    `;
+                    html += `<div class="archive-item" data-archive-id="${t.id}"><div class="task-content">${escapeHtml(t.text)}<span class="date-badge">${t.date}</span></div><button class="archive-delete-btn" data-archive-id="${t.id}"><i class="fas fa-times-circle"></i></button></div>`;
                 });
                 container.innerHTML = html;
-                // attach delete to each archive item
                 container.querySelectorAll('.archive-delete-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const id = btn.dataset.archiveId;
                         completedTasks = completedTasks.filter(t => t.id !== id);
-                        save();
-                        renderArchive();
-                        updateStats();  // keep monthCount accurate
-                        renderCalendar(); // dots may change
+                        save(); renderArchive(); renderCalendar();
                     });
                 });
             }
         }
 
-        function escapeHtml(str) {
-            return str.replace(/[&<>"]/g, m => {
-                if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; if (m === '"') return '&quot;';
-                return m;
-            });
-        }
+        function escapeHtml(str) { return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
         function attachActiveListeners() {
             document.querySelectorAll('[data-action="toggle"]').forEach(el => {
@@ -696,115 +582,97 @@
             if (idx !== -1) {
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
-                playCompleteFeedback();  // beep + vibration
+                playCompleteFeedback();
+                clearAlarm(moved.id); // remove alarm when completed
+
+                if (moved.repeat && moved.repeat !== 'none') {
+                    const nextTask = { ...moved, id: Date.now() + '-' + Math.random().toString(36).substr(2,6) };
+                    const currentDate = new Date(moved.date + 'T12:00:00');
+                    if (moved.repeat === 'daily') currentDate.setDate(currentDate.getDate() + 1);
+                    else if (moved.repeat === 'weekly') currentDate.setDate(currentDate.getDate() + 7);
+                    else if (moved.repeat === 'monthly') currentDate.setMonth(currentDate.getMonth() + 1);
+                    const y = currentDate.getFullYear();
+                    const m = String(currentDate.getMonth()+1).padStart(2,'0');
+                    const d = String(currentDate.getDate()).padStart(2,'0');
+                    nextTask.date = `${y}-${m}-${d}`;
+                    activeTasks.push(nextTask);
+                    if (nextTask.reminder && nextTask.priority === '🔴') scheduleAlarm(nextTask);
+                }
                 save();
-                renderCalendar();
-                renderActiveList();
-                renderArchive();
-                updateStats();
+                renderCalendar(); renderActiveList(); renderArchive();
             }
         }
 
         function handleDelete(e) {
             const id = e.currentTarget.dataset.id;
+            clearAlarm(id);
             activeTasks = activeTasks.filter(t => t.id !== id);
-            save();
-            renderCalendar();
-            renderActiveList();
-            updateStats();
+            save(); renderCalendar(); renderActiveList();
         }
 
-        function updateStats() {
-            // only used internally for monthCount on dots, no display row
-            // but we keep monthCount for has-tasks logic, no need to update UI row
-        }
-
-        // modal
         function openModal() {
             document.getElementById('modalDate').innerText = `📅 ${selectedDate}`;
             document.getElementById('modalTaskInput').value = '';
+            document.getElementById('modalPriority').value = '🟡';
+            document.getElementById('modalRepeat').value = 'none';
+            document.getElementById('modalReminderTime').value = '';
             document.getElementById('modalOverlay').style.display = 'flex';
             setTimeout(() => document.getElementById('modalTaskInput').focus(), 100);
         }
-        function closeModal() {
-            document.getElementById('modalOverlay').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
         function addTaskFromModal() {
             const inp = document.getElementById('modalTaskInput');
             const text = inp.value.trim();
             if (!text) { alert('enter task'); return; }
-            activeTasks.push({
-                id: Date.now() + '-' + Math.random().toString(36).substr(2, 6),
-                text: text,
-                date: selectedDate,
-            });
+            const priority = document.getElementById('modalPriority').value;
+            const repeat = document.getElementById('modalRepeat').value;
+            const reminder = document.getElementById('modalReminderTime').value || null;
+            const newTask = {
+                id: Date.now() + '-' + Math.random().toString(36).substr(2,6),
+                text, date: selectedDate, priority, repeat, reminder
+            };
+            activeTasks.push(newTask);
+            if (reminder && priority === '🔴') scheduleAlarm(newTask);
             save();
-            inp.value = '';
-            closeModal();
-            renderCalendar();
-            renderActiveList();
+            inp.value = ''; closeModal();
+            renderCalendar(); renderActiveList();
         }
 
-        // swipe handling for month navigation
+        // swipe
         let touchStartX = 0;
-        const swipeThreshold = 50; // px
-
-        function handleTouchStart(e) {
-            touchStartX = e.touches[0].clientX;
-        }
+        function handleTouchStart(e) { touchStartX = e.touches[0].clientX; }
         function handleTouchEnd(e) {
             if (!touchStartX) return;
             const diff = e.changedTouches[0].clientX - touchStartX;
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    // right swipe → previous month
-                    if (currentMonth === 0) { currentMonth = 11; currentYear--; }
-                    else currentMonth--;
-                } else {
-                    // left swipe → next month
-                    if (currentMonth === 11) { currentMonth = 0; currentYear++; }
-                    else currentMonth++;
-                }
-                renderCalendar();
-                renderActiveList();
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) { if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--; }
+                else { if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++; }
+                renderCalendar(); renderActiveList();
             }
             touchStartX = 0;
         }
 
-        // jump to today when tapping selected date row
         function jumpToToday() {
             const today = new Date();
-            currentYear = today.getFullYear();
-            currentMonth = today.getMonth();
+            currentYear = today.getFullYear(); currentMonth = today.getMonth();
             selectedDate = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-            renderCalendar();
-            renderActiveList();
+            renderCalendar(); renderActiveList();
         }
 
-        // init
         window.addEventListener('DOMContentLoaded', () => {
-            renderCalendar();
-            renderActiveList();
-            renderArchive();
-            updateStats();
+            renderCalendar(); renderActiveList(); renderArchive();
+            rescheduleAllAlarms();
 
-            // swipe listeners
             const swipeArea = document.getElementById('calendarSwipeArea');
             swipeArea.addEventListener('touchstart', handleTouchStart, { passive: true });
             swipeArea.addEventListener('touchend', handleTouchEnd);
-
-            // tap on date row → jump to today
             document.getElementById('todayTap').addEventListener('click', jumpToToday);
 
             document.getElementById('plusBtn').addEventListener('click', openModal);
             document.getElementById('modalAdd').addEventListener('click', addTaskFromModal);
             document.getElementById('modalCancel').addEventListener('click', closeModal);
-            document.getElementById('modalOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('modalOverlay')) closeModal();
-            });
-            document.getElementById('modalTaskInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addTaskFromModal();
-            });
+            document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
+            document.getElementById('modalTaskInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') addTaskFromModal(); });
 
             document.getElementById('archiveToggle').addEventListener('click', () => {
                 archiveVisible = !archiveVisible;
