@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>to‑do · mobile + swipe · sound</title>
+    <title>to‑do · long‑press · swipe · sound</title>
     <style>
         * {
             margin: 0;
@@ -34,7 +34,6 @@
             flex-direction: column;
         }
 
-        /* header with + icon (bigger touch target) */
         .header {
             display: flex;
             align-items: center;
@@ -76,7 +75,6 @@
             transform: scale(0.96);
         }
 
-        /* active task list */
         .section-title {
             font-weight: 700;
             font-size: 1.2rem;
@@ -180,7 +178,6 @@
             font-size: 0.95rem;
         }
 
-        /* archive toggle (bigger touch area) */
         .archive-header {
             display: flex;
             align-items: center;
@@ -250,7 +247,6 @@
             transform: scale(1.1);
         }
 
-        /* calendar card */
         .calendar-card {
             background: white;
             border-radius: 32px;
@@ -258,7 +254,7 @@
             border: 1px solid #dae6f2;
             box-shadow: 0 6px 14px rgba(0,0,0,0.02);
             margin: 0.5rem 0 0.8rem;
-            touch-action: pan-y pinch-zoom; /* allow horizontal swipe but keep vertical scroll */
+            touch-action: pan-y pinch-zoom;
         }
 
         .selected-date-row {
@@ -330,6 +326,9 @@
             border: 1px solid transparent;
             cursor: pointer;
             padding: 4px 0;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation; /* improve long-press */
         }
 
         .cal-cell:active {
@@ -369,7 +368,12 @@
             color: #a6561c;
         }
 
-        /* modal */
+        /* long press hint (subtle) */
+        .cal-cell.long-press-hint {
+            background: #d4e3ff;
+            transition: background 0.1s;
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -442,23 +446,19 @@
 </head>
 <body>
 <div class="app">
-    <!-- header with big + button -->
     <div class="header">
         <div class="title-area"><h1>TO-DO</h1></div>
         <div class="plus-btn" id="plusBtn" aria-label="add task">+</div>
     </div>
 
-    <!-- active tasks for selected date -->
     <div class="section-title"><i class="fas fa-list-check"></i> <span id="selectedDateHeading">2026-03-15</span></div>
     <div id="activeTaskList" class="task-list"></div>
 
-    <!-- archive (collapsible, with individual delete) -->
     <div class="archive-header" id="archiveToggle">
         <i class="fas fa-archive" id="archiveIcon"></i> COMPLETED <span id="archiveCount">(0)</span>
     </div>
     <div id="archiveListContainer" class="archive-list"></div>
 
-    <!-- calendar card with swipe -->
     <div class="calendar-card" id="calendarSwipeArea">
         <div class="selected-date-row" id="todayTap">
             <span>📅</span>
@@ -473,7 +473,6 @@
         <div id="calendarGrid" class="month-grid"></div>
     </div>
 
-    <!-- modal for quick add -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
             <div class="modal-date" id="modalDate">📅 2026-03-15</div>
@@ -530,12 +529,12 @@
         })();
 
         let archiveVisible = false;
+        let longPressTimer = null;
+        const LONG_PRESS_DELAY = 500; // ms
 
         // --- beep + vibration ---
         function playCompleteFeedback() {
-            // vibration (if supported)
             if (navigator.vibrate) navigator.vibrate(30);
-            // beep using Web Audio API (simple 500Hz tone for 120ms)
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioCtx.createOscillator();
@@ -546,9 +545,12 @@
                 oscillator.connect(gainNode).connect(audioCtx.destination);
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.12);
-                // resume if suspended
                 if (audioCtx.state === 'suspended') audioCtx.resume();
-            } catch (e) { /* fallback: no sound */ }
+            } catch (e) { /* fallback */ }
+        }
+
+        function playLongPressHint() {
+            if (navigator.vibrate) navigator.vibrate(20); // subtle tap
         }
 
         // helpers
@@ -576,16 +578,82 @@
             const grid = document.getElementById('calendarGrid');
             renderMonth(grid);
 
+            // attach both click and long-press to each cell
             document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
-                cell.addEventListener('click', (e) => {
-                    const newDate = cell.dataset.date;
-                    if (newDate) {
-                        selectedDate = newDate;
-                        renderCalendar();
-                        renderActiveList();
-                    }
-                });
+                // remove old listeners to avoid duplicates (simple approach: replace with new)
+                cell.removeEventListener('click', handleCellClick);
+                cell.removeEventListener('touchstart', handleTouchStartLong);
+                cell.removeEventListener('touchend', handleTouchEndLong);
+                cell.removeEventListener('touchcancel', handleTouchCancelLong);
+                cell.removeEventListener('touchmove', handleTouchMoveLong);
+                // re-attach
+                cell.addEventListener('click', handleCellClick);
+                cell.addEventListener('touchstart', handleTouchStartLong, { passive: true });
+                cell.addEventListener('touchend', handleTouchEndLong);
+                cell.addEventListener('touchcancel', handleTouchCancelLong);
+                cell.addEventListener('touchmove', handleTouchMoveLong, { passive: true });
             });
+        }
+
+        function handleCellClick(e) {
+            const dateStr = e.currentTarget.dataset.date;
+            if (dateStr) {
+                selectedDate = dateStr;
+                renderCalendar();
+                renderActiveList();
+            }
+        }
+
+        // long press handlers
+        function handleTouchStartLong(e) {
+            const cell = e.currentTarget;
+            const dateStr = cell.dataset.date;
+            if (!dateStr) return;
+
+            // optional visual hint
+            cell.classList.add('long-press-hint');
+
+            longPressTimer = setTimeout(() => {
+                // long press confirmed: open modal for that date
+                playLongPressHint();
+                // set selected date to this cell's date
+                selectedDate = dateStr;
+                renderCalendar();   // updates selection
+                renderActiveList();
+                openModal();        // opens modal with selectedDate
+                // clean timer & hint
+                if (longPressTimer) clearTimeout(longPressTimer);
+                longPressTimer = null;
+                cell.classList.remove('long-press-hint');
+            }, LONG_PRESS_DELAY);
+        }
+
+        function handleTouchEndLong(e) {
+            const cell = e.currentTarget;
+            cell.classList.remove('long-press-hint');
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }
+
+        function handleTouchCancelLong(e) {
+            const cell = e.currentTarget;
+            cell.classList.remove('long-press-hint');
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }
+
+        function handleTouchMoveLong(e) {
+            // if user moves, cancel long press (like standard)
+            const cell = e.currentTarget;
+            cell.classList.remove('long-press-hint');
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
         }
 
         function renderMonth(container) {
@@ -617,7 +685,6 @@
             container.innerHTML = html;
         }
 
-        // render active tasks for selected date
         function renderActiveList() {
             const container = document.getElementById('activeTaskList');
             const filtered = activeTasks.filter(t => t.date === selectedDate);
@@ -637,10 +704,8 @@
                 container.innerHTML = html;
             }
             attachActiveListeners();
-            updateStats();  // though stats row removed, keep internal for monthCount if needed
         }
 
-        // render archive with individual delete button
         function renderArchive() {
             const container = document.getElementById('archiveListContainer');
             document.getElementById('archiveCount').innerText = `(${completedTasks.length})`;
@@ -657,7 +722,6 @@
                     `;
                 });
                 container.innerHTML = html;
-                // attach delete to each archive item
                 container.querySelectorAll('.archive-delete-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -665,8 +729,7 @@
                         completedTasks = completedTasks.filter(t => t.id !== id);
                         save();
                         renderArchive();
-                        updateStats();  // keep monthCount accurate
-                        renderCalendar(); // dots may change
+                        renderCalendar();
                     });
                 });
             }
@@ -696,12 +759,11 @@
             if (idx !== -1) {
                 const [moved] = activeTasks.splice(idx, 1);
                 completedTasks.push(moved);
-                playCompleteFeedback();  // beep + vibration
+                playCompleteFeedback();
                 save();
                 renderCalendar();
                 renderActiveList();
                 renderArchive();
-                updateStats();
             }
         }
 
@@ -711,12 +773,6 @@
             save();
             renderCalendar();
             renderActiveList();
-            updateStats();
-        }
-
-        function updateStats() {
-            // only used internally for monthCount on dots, no display row
-            // but we keep monthCount for has-tasks logic, no need to update UI row
         }
 
         // modal
@@ -747,21 +803,19 @@
 
         // swipe handling for month navigation
         let touchStartX = 0;
-        const swipeThreshold = 50; // px
+        const swipeThreshold = 50;
 
-        function handleTouchStart(e) {
+        function handleSwipeStart(e) {
             touchStartX = e.touches[0].clientX;
         }
-        function handleTouchEnd(e) {
+        function handleSwipeEnd(e) {
             if (!touchStartX) return;
             const diff = e.changedTouches[0].clientX - touchStartX;
             if (Math.abs(diff) > swipeThreshold) {
                 if (diff > 0) {
-                    // right swipe → previous month
                     if (currentMonth === 0) { currentMonth = 11; currentYear--; }
                     else currentMonth--;
                 } else {
-                    // left swipe → next month
                     if (currentMonth === 11) { currentMonth = 0; currentYear++; }
                     else currentMonth++;
                 }
@@ -771,7 +825,6 @@
             touchStartX = 0;
         }
 
-        // jump to today when tapping selected date row
         function jumpToToday() {
             const today = new Date();
             currentYear = today.getFullYear();
@@ -786,14 +839,11 @@
             renderCalendar();
             renderActiveList();
             renderArchive();
-            updateStats();
 
-            // swipe listeners
             const swipeArea = document.getElementById('calendarSwipeArea');
-            swipeArea.addEventListener('touchstart', handleTouchStart, { passive: true });
-            swipeArea.addEventListener('touchend', handleTouchEnd);
+            swipeArea.addEventListener('touchstart', handleSwipeStart, { passive: true });
+            swipeArea.addEventListener('touchend', handleSwipeEnd);
 
-            // tap on date row → jump to today
             document.getElementById('todayTap').addEventListener('click', jumpToToday);
 
             document.getElementById('plusBtn').addEventListener('click', openModal);
