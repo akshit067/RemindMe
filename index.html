@@ -834,9 +834,9 @@
         // Priority badges - icons only (text hidden via CSS)
         function getPriorityBadge(priority) {
             const icons = {
-                high: '🔴',
-                medium: '🟠',
-                low: '🟢'
+                high: '',
+                medium: '',
+                low: ''
             };
             // Return only icon, text is hidden by CSS
             return `<span class="badge priority-badge-${priority}">${icons[priority]}<span>${priority}</span></span>`;
